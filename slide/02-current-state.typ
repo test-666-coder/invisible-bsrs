@@ -6,27 +6,38 @@
   #deck-grid(columns: (1.52fr, 0.9fr), gutter: gap,
     panel([
       #tag("現況分析")
-      #v(0.14in)
-      #text(size: 20pt, weight: "bold")[風險不是沒有出現，而是沒有被主動說出來]
-      #v(0.18in)
+      \
+      #text(size: 25pt, weight: "bold")[風險不是沒有出現\ 而是沒有被主動說出來]
+      #v(0.04in)
 
-      #grid(columns: (1fr, 0.3in, 2fr), gutter: 8pt,
-        block(fill: cream, radius: 6pt, inset: 12pt, height: 1.32in)[
+      #align(center)[
+      #block(width: 100%)[
+      #grid(columns: (2.85in, 0.3in, 1fr), gutter: 8pt, align: left,
+        block(width: 100%, fill: cream, radius: 6pt, inset: 12pt, height: 1.32in)[
           #text(size: 10.5pt, fill: muted)[量表上的回答]
-          #v(0in)
-          #text(size: 17pt, weight: "bold")[「沒有，我還好。」]
-          #v(0in)
+          #v(-0.1in)
+          #box(width: 100%, fill: white, radius: 6pt, stroke: 2pt + sand, inset: 8pt)[
+            #grid(columns: (18pt, 1fr), column-gutter: 8pt, align: horizon,
+              box(width: 14pt, height: 14pt, fill: wine, radius: 2pt)[
+                #align(center + horizon)[#text(size: 9pt, weight: "bold", fill: white)[✓]]
+              ],
+              text(size: 14pt, weight: "bold")[沒有，我還好]
+            )
+          ]
+          #v(-0.1in)
           #text(size: 10pt, fill: muted)[仰賴患者主動承認]
         ],
         align(center + horizon)[#text(size: 22pt, weight: "bold", fill: wine)[≠]],
-        block(fill: blush, radius: 6pt, inset: 12pt, height: 1.32in)[
+        block(width: 100%, fill: blush, radius: 6pt, inset: 12pt, height: 1.32in)[
           #text(size: 10.5pt, fill: wine)[自然對話中的線索]
-          #v(0in)
-          #text(size: 16pt, weight: "bold", fill: wine)[「X你XXX」]
-          #v(0in)
+          #v(-0.1in)
+          #text(size: 20pt, weight: "bold", fill: wine)[「X你XXX，我沒有易怒」]
+          #v(-0.1in)
           #text(size: 10pt, fill: muted)[症狀已經出現在敘事裡]
         ]
       )
+      ]
+      ]
 
       #v(0in)
       #line(length: 100%, stroke: 0.8pt + sand)
