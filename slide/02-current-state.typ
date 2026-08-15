@@ -5,31 +5,35 @@
 #place(left + top, dx: margin-x, dy: content-y)[
   #deck-grid(columns: (1.38fr, 0.82fr), gutter: gap,
     panel([
-      #tag("核心痛點")
-      #v(0.2in)
-      #text(size: 22pt, weight: "bold")[自陳量表的盲點：患者必須先願意承認]
-      #v(0.16in)
-      #text(size: 13pt, fill: muted)[BSRS 需要患者自行填答；但受到自我認知、防衛或污名影響，答案未必呈現完整狀態。]
-      #v(0.2in)
-
-      #grid(columns: (1fr, 0.32in, 1fr), gutter: 9pt,
-        block(fill: cream, radius: 6pt, inset: 14pt, height: 1.95in)[
-          #text(size: 11pt, weight: "bold", fill: muted)[量表上的回答]
+      #tag("現況分析")
+      #v(0.18in)
+      #grid(columns: (1fr, 1fr), gutter: 12pt,
+        block(fill: cream, radius: 6pt, inset: 14pt, height: 3.62in)[
+          #text(size: 11pt, weight: "bold", fill: wine)[痛點 01｜患者不一定願意填]
+          #v(0.14in)
+          #text(size: 18pt, weight: "bold")[自陳量表仰賴主動承認]
           #v(0.13in)
-          #text(size: 15pt, weight: "bold")[過去一週，您是否容易動怒？]
-          #v(0.03in)
-          #box(width: 100%, fill: white, radius: 4pt, stroke: 1pt + sand, inset: 12pt)[
-            #grid(columns: (18pt, 1fr), column-gutter: 8pt,
-              circle(radius: 7pt, stroke: 1.5pt + muted),
-              text(size: 15pt)[沒有，我還好]
-            )
+          #text(size: 12pt, fill: muted)[受到自我認知、防衛或污名影響，填答結果未必呈現完整狀態。]
+          #v(0.12in)
+          #box(width: 100%, fill: white, radius: 4pt, stroke: 1pt + sand, inset: 10pt)[
+            #text(size: 11pt, fill: muted)[量表回答]
+            #linebreak()
+            #text(size: 14pt, weight: "bold")[「沒有，我還好。」]
           ]
+          #v(0.08in)
         ],
-        align(center + horizon)[#text(size: 27pt, weight: "bold", fill: wine)[≠]],
-        block(fill: blush, radius: 6pt, inset: 14pt, height: 1.95in)[
-          #text(size: 11pt, weight: "bold", fill: wine)[自然對話中的訊號]
-          #v(0.13in)
-          #text(size: 21pt, weight: "bold", fill: wine)[「最近一點小事，就讓我很火大。」]
+        block(fill: blush, radius: 6pt, inset: 14pt, height: 3.62in)[
+          #text(size: 11pt, weight: "bold", fill: wine)[痛點 02｜自殺風險仍需更早看見]
+          #v(0.14in)
+          #text(size: 17pt, weight: "bold")[台灣每年仍有近四千人死於自殺]
+          #v(0.14in)
+          #text(size: 34pt, weight: "bold", fill: wine)[3,951]
+          #text(size: 11pt, fill: muted)[ 人｜114 年死亡人數]
+          #v(0.05in)
+          #text(size: 21pt, weight: "bold")[16.9]
+          #text(size: 11pt, fill: muted)[ 人／每十萬人口]
+          #v(0.1in)
+          #text(size: 8.5pt, fill: muted)[資料：衛福部「114 年國人死因統計結果」]
         ]
       )
     ], fill: white, height: 4.95in),
@@ -56,7 +60,7 @@
 ]
 
 #place(bottom + left, dx: margin-x, dy: -0.62in)[
-  #text(size: 18pt, weight: "bold", fill: wine)[不是患者沒有症狀，而是症狀未必會被自己填進量表。]
+  #text(size: 17pt, weight: "bold", fill: wine)[風險線索可能已經出現在對話裡，卻沒有被量表或單次問答捕捉。]
 ]
 #footer(2)
 #pagebreak()
