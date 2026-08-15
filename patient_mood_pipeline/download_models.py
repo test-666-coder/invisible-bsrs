@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 
 from .config import load_config
 
@@ -11,6 +12,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     config = load_config()
+    os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS", "1")
     model_ids = [config.asr_model_id, config.ner_model_id, config.emotion_model_id]
     model_ids.extend(args.model or [])
 

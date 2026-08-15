@@ -84,8 +84,6 @@ def _pipeline(task: str, model_id: str, config: PipelineConfig, **kwargs):
         "device": device,
         **kwargs,
     }
-    if config.hf_cache_dir:
-        pipe_kwargs["cache_dir"] = config.hf_cache_dir
     if device != -1 and task == "automatic-speech-recognition":
         pipe_kwargs["torch_dtype"] = torch.float16
     return pipeline(**pipe_kwargs)
