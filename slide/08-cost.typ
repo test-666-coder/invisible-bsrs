@@ -37,7 +37,7 @@
   ]
 ]
 
-#place(left + top, dx: margin-x, dy: 5.70in)[
+#place(left + top, dx: margin-x, dy: 5.48in)[
   #block(width: content-w)[
     #text(size: 10pt, weight: "bold", tracking: 1.2pt, fill: wine)[首年成果]
     #v(0.10in)
