@@ -73,6 +73,7 @@ def run_pipeline(
             deidentified_transcript=pre_correction_deid_result.text,
             model=transcript_correction_model or config.transcript_correction_model,
             language=language,
+            max_output_tokens=config.transcript_correction_max_output_tokens,
         )
         corrected_transcript = transcript_correction["corrected_transcript"].strip()
 
@@ -89,6 +90,7 @@ def run_pipeline(
             language=language,
             system_prompt=load_bsrs_system_prompt(config),
             reasoning_effort=config.openai_reasoning_effort,
+            max_output_tokens=config.openai_bsrs_max_output_tokens,
         )
 
     debug_output = {

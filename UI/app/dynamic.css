@@ -149,23 +149,6 @@ button:focus-visible,
   font-weight: 650;
 }
 
-.status-badge {
-  padding: 7px 10px;
-  border: 1px solid rgba(40, 95, 88, 0.52);
-  border-radius: 2px;
-  background: rgba(227, 236, 231, 0.72);
-  color: var(--teal-dark);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  transform: rotate(-0.6deg);
-}
-
-.status-badge i {
-  width: 6px;
-  height: 6px;
-  background: var(--teal);
-}
-
 .ghost-button,
 .safety-button,
 .confirm-button,
@@ -841,7 +824,6 @@ button:focus-visible,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .status-badge,
   .brand-mark {
     transform: none;
   }

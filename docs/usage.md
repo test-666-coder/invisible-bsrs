@@ -48,12 +48,14 @@ OPENAI_API_KEY=你的 OpenAI API key
 ```text
 OPENAI_BSRS_MODEL=gpt-5.6-sol
 OPENAI_BSRS_REASONING_EFFORT=xhigh
+OPENAI_BSRS_MAX_OUTPUT_TOKENS=24000
 ```
 
 逐字稿校正 agent 預設仍使用：
 
 ```text
 OPENAI_TRANSCRIPT_MODEL=gpt-4o-mini
+OPENAI_TRANSCRIPT_MAX_OUTPUT_TOKENS=20000
 ```
 
 預設語音轉文字模型是：
@@ -202,6 +204,17 @@ python -m patient_mood_pipeline.run --audio .\samples\your_audio.wav --local-onl
 ### 第一次上傳音檔很慢
 
 第一次分析會載入本地模型，GPU 或 CPU 使用率可能需要一段時間才會上來。後續同一個服務沒有關掉時，通常會比較快。
+
+### 顯示 JSON 不完整或 Unterminated string
+
+這通常不是本機服務沒開，而是 OpenAI 回傳的 structured JSON 被截斷。請先確認 `.env` 有：
+
+```text
+OPENAI_TRANSCRIPT_MAX_OUTPUT_TOKENS=20000
+OPENAI_BSRS_MAX_OUTPUT_TOKENS=24000
+```
+
+如果音檔很長，建議拆成較短段落再分析，或再提高上述數值。改完後需要重新啟動模型服務。
 
 ### 語音轉文字錯誤率太高
 

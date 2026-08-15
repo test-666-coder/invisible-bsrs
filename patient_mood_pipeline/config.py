@@ -14,6 +14,8 @@ class PipelineConfig:
     openai_model: str
     transcript_correction_model: str
     openai_reasoning_effort: str | None
+    openai_bsrs_max_output_tokens: int
+    transcript_correction_max_output_tokens: int
     bsrs_system_prompt_file: str | None
     bsrs_system_prompt_inline: bool
     asr_language: str
@@ -68,6 +70,8 @@ def load_config() -> PipelineConfig:
         openai_model=openai_model,
         transcript_correction_model=os.getenv("OPENAI_TRANSCRIPT_MODEL", "gpt-4o-mini"),
         openai_reasoning_effort=_env_str("OPENAI_BSRS_REASONING_EFFORT"),
+        openai_bsrs_max_output_tokens=_env_int("OPENAI_BSRS_MAX_OUTPUT_TOKENS", 24000),
+        transcript_correction_max_output_tokens=_env_int("OPENAI_TRANSCRIPT_MAX_OUTPUT_TOKENS", 20000),
         bsrs_system_prompt_file=_env_str("BSRS_SYSTEM_PROMPT_FILE"),
         bsrs_system_prompt_inline=bool(system_prompt_inline and system_prompt_inline.strip()),
         asr_language=os.getenv("ASR_LANGUAGE", "zh"),

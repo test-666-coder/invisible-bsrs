@@ -29,8 +29,8 @@ test("server-renders the BSRS review surface", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /澄心/);
-  assert.match(html, /AI 情緒聽診器/);
+  assert.match(html, /隱形溫度計/);
+  assert.match(html, /醫病對話 BSRS 輔助評估/);
   assert.match(html, /核心評估/);
   assert.match(html, /上傳音檔/);
   assert.match(html, /待上傳/);

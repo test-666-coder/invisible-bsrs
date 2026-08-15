@@ -476,7 +476,8 @@ export default function Home() {
       flash("音檔分析完成，量表已更新");
     } catch (caught) {
       const message = caught instanceof Error ? caught.message : "音檔分析失敗。";
-      setError(`${message} 請確認本機模型服務已啟動。`);
+      const needsServiceHint = /Failed to fetch|NetworkError|Load failed|分析服務回應/i.test(message);
+      setError(needsServiceHint ? `${message} 請確認本機模型服務已啟動。` : message);
     } finally {
       setIsAnalyzingAudio(false);
     }
@@ -490,10 +491,10 @@ export default function Home() {
         </div>
       )}
       <header className="topbar">
-        <div className="brand-mark">澄</div>
+        <div className="brand-mark">隱</div>
         <div className="brand-copy">
-          <strong>澄心</strong>
-          <span>AI 情緒聽診器</span>
+          <strong>隱形溫度計</strong>
+          <span>醫病對話 BSRS 輔助評估</span>
         </div>
         <div className="header-divider" />
         <div className="session-title">
@@ -501,9 +502,6 @@ export default function Home() {
           <strong>#{data.session.session_id}</strong>
         </div>
         <div className="top-actions">
-          <span className="status-badge">
-            <i /> {data.session.status === "completed" ? "分析完成" : data.session.status}
-          </span>
           <span className="file-name" title={audioFile ? audioFileName : fileName}>
             {audioFile ? audioFileName : fileName}
           </span>

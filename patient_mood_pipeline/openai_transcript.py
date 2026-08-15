@@ -82,7 +82,7 @@ def correct_deidentified_transcript(
     deidentified_transcript: str,
     model: str,
     language: str = "zh-TW",
-    max_output_tokens: int = 5000,
+    max_output_tokens: int = 20000,
 ) -> dict[str, Any]:
     if not os.getenv("OPENAI_API_KEY"):
         raise RuntimeError("Missing OPENAI_API_KEY. Add it to .env or the environment before running transcript correction.")
@@ -111,7 +111,7 @@ def correct_deidentified_transcript(
         },
         max_output_tokens=max_output_tokens,
     )
-    result = json.loads(_response_text(response))
+    result = _load_response_json(response, step_name="逐字稿校正")
     result["model_id"] = model
     result["generated_at"] = generated_at
     result["input_placeholders"] = sorted(set(re.findall(r"\[[A-Z_]+\]", deidentified_transcript or "")))
@@ -133,3 +133,20 @@ def _response_text(response) -> str:
     if chunks:
         return "".join(chunks)
     raise RuntimeError("OpenAI response did not contain output_text.")
+
+
+def _load_response_json(response, *, step_name: str) -> dict[str, Any]:
+    text = _response_text(response).strip()
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as exc:
+        preview_start = max(0, exc.pos - 120)
+        preview_end = min(len(text), exc.pos + 120)
+        preview = text[preview_start:preview_end].replace("\n", " ")
+        raise RuntimeError(
+            f"{step_name} 的 OpenAI 回傳 JSON 不完整或格式錯誤：{exc.msg} "
+            f"(line {exc.lineno}, column {exc.colno}, char {exc.pos})。"
+            "常見原因是音檔/逐字稿太長造成輸出被截斷；請提高 OPENAI_TRANSCRIPT_MAX_OUTPUT_TOKENS，"
+            "或縮短單次分析音檔。"
+            f" 錯誤附近片段：{preview}"
+        ) from exc
