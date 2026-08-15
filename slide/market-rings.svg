@@ -23,6 +23,6 @@
 
   <path d="M545 413 C610 413 620 448 650 448" fill="none" stroke="#C89A35" stroke-width="3"/>
   <circle cx="650" cy="448" r="5" fill="#C89A35"/>
-  <text x="520" y="485" fill="#8E1F1F" class="eyebrow">擴張順序</text>
-  <text x="520" y="514" fill="#756965" class="body">心理專科 → 基層醫療 → 校園</text>
+  <text x="500" y="485" fill="#8E1F1F" class="eyebrow">擴張順序</text>
+  <text x="660" y="514" fill="#756965" text-anchor="end" class="body">心理專科 → 基層醫療 → 校園</text>
 </svg>
