@@ -81,6 +81,12 @@ EMOTION_LABEL_DETAILS = {
 
 
 def transcribe_audio(audio_path: str | Path, config: PipelineConfig) -> dict:
+    if config.asr_backend.lower() in {"faster-whisper", "faster_whisper", "ctranslate2"}:
+        return _transcribe_audio_faster_whisper(audio_path, config)
+    return _transcribe_audio_transformers(audio_path, config)
+
+
+def _transcribe_audio_transformers(audio_path: str | Path, config: PipelineConfig) -> dict:
     pipe = _pipeline(
         "automatic-speech-recognition",
         config.asr_model_id,
@@ -114,6 +120,7 @@ def transcribe_audio(audio_path: str | Path, config: PipelineConfig) -> dict:
     return {
         "text": text.strip(),
         "segments": result.get("chunks", []) if isinstance(result, dict) else [],
+        "backend": "transformers",
         "model_id": config.asr_model_id,
         "decode_settings": {
             "language": config.asr_language,
@@ -121,6 +128,77 @@ def transcribe_audio(audio_path: str | Path, config: PipelineConfig) -> dict:
             "chunk_length_s": config.asr_chunk_length_s,
             "stride_length_s": config.asr_stride_length_s,
         },
+    }
+
+
+def _transcribe_audio_faster_whisper(audio_path: str | Path, config: PipelineConfig) -> dict:
+    device = _resolve_faster_whisper_device(config.hf_device)
+    compute_type = config.asr_compute_type if device == "cuda" else config.asr_cpu_compute_type
+    warnings: list[str] = []
+    try:
+        return _run_faster_whisper_transcription(
+            audio_path,
+            config,
+            device=device,
+            compute_type=compute_type,
+            warnings=warnings,
+        )
+    except Exception as exc:
+        if device != "cuda":
+            raise
+        warnings.append(f"CUDA faster-whisper failed; retried on CPU: {exc}")
+        return _run_faster_whisper_transcription(
+            audio_path,
+            config,
+            device="cpu",
+            compute_type=config.asr_cpu_compute_type,
+            warnings=warnings,
+        )
+
+
+def _run_faster_whisper_transcription(
+    audio_path: str | Path,
+    config: PipelineConfig,
+    *,
+    device: str,
+    compute_type: str,
+    warnings: list[str],
+) -> dict:
+    model = _cached_faster_whisper_model(config.asr_model_id, device, compute_type, config.hf_cache_dir or "")
+    segments_iter, info = model.transcribe(
+        str(audio_path),
+        language=config.asr_language or None,
+        task="transcribe",
+        beam_size=max(1, int(config.asr_num_beams)),
+        vad_filter=config.asr_vad_filter,
+        condition_on_previous_text=config.asr_condition_on_previous_text,
+    )
+    segments = list(segments_iter)
+    text = "".join(segment.text for segment in segments).strip()
+    return {
+        "text": text,
+        "segments": [
+            {
+                "start": float(getattr(segment, "start", 0.0)),
+                "end": float(getattr(segment, "end", 0.0)),
+                "text": str(getattr(segment, "text", "")).strip(),
+            }
+            for segment in segments
+        ],
+        "backend": "faster-whisper",
+        "model_id": config.asr_model_id,
+        "decode_settings": {
+            "language": config.asr_language,
+            "num_beams": config.asr_num_beams,
+            "device": device,
+            "compute_type": compute_type,
+            "vad_filter": config.asr_vad_filter,
+            "condition_on_previous_text": config.asr_condition_on_previous_text,
+        },
+        "language": getattr(info, "language", None),
+        "language_probability": float(getattr(info, "language_probability", 0.0) or 0.0),
+        "duration": float(getattr(info, "duration", 0.0) or 0.0),
+        "warnings": warnings,
     }
 
 
@@ -182,6 +260,22 @@ def _cached_pipeline(task: str, model_id: str, device: int, kwargs_items: tuple)
     return pipeline(**pipe_kwargs)
 
 
+@lru_cache(maxsize=4)
+def _cached_faster_whisper_model(model_id: str, device: str, compute_type: str, download_root: str):
+    try:
+        from faster_whisper import WhisperModel
+    except ImportError as exc:
+        raise LocalModelError("Missing faster-whisper. Install requirements.txt before running the stronger ASR backend.") from exc
+
+    kwargs = {
+        "device": device,
+        "compute_type": compute_type,
+    }
+    if download_root:
+        kwargs["download_root"] = download_root
+    return WhisperModel(model_id, **kwargs)
+
+
 def _resolve_device(value: str) -> int:
     setting = (value or "auto").lower()
     if setting == "cpu":
@@ -200,6 +294,22 @@ def _resolve_device(value: str) -> int:
         return int(setting)
     except ValueError:
         return -1
+
+
+def _resolve_faster_whisper_device(value: str) -> str:
+    setting = (value or "auto").lower()
+    if setting == "cpu":
+        return "cpu"
+    if setting == "auto":
+        try:
+            import torch
+
+            return "cuda" if torch.cuda.is_available() else "cpu"
+        except ImportError:
+            return "cpu"
+    if setting.startswith("cuda") or setting.isdigit():
+        return "cuda"
+    return "cpu"
 
 
 def _run_ner_in_chunks(text: str, ner, chunk_chars: int) -> list[dict[str, Any]]:

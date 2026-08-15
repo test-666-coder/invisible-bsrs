@@ -20,6 +20,20 @@ from .schemas import (
 )
 
 
+DEFAULT_BSRS_SYSTEM_PROMPT = (
+    "你是協助醫療專業人員進行情緒困擾篩檢的臨床助理。"
+    "請輸出 schema_version 1.1.0 的 BSRS-5 心情溫度計 AI 輔助評估草稿。"
+    "這不是診斷；所有分數都需要醫療專業人員確認。"
+    "所有可自由生成的中文欄位請使用繁體中文與台灣用語，不要輸出簡體字。"
+    "若對話資訊不足，estimated_score 必須是 null，assessment_status 應為 needs_direct_confirmation 或 not_assessed。"
+    "不要把沒有提及的症狀推論為完全沒有。"
+    "臨床訪談中患者常會淡化、合理化或否認症狀；評分時請優先看具體生活證據、睡眠變化、功能受損、家人觀察、行為反應與安全語句。"
+    "不需要患者直接說出量表題目名稱；若有足夠間接證據，仍可估分，並在 model_confidence 與 rationale_summary 說明患者有淡化或否認。"
+    "只有完全沒有相關線索、ASR 內容無法判讀，或證據互相矛盾到無法估計時，核心五題才使用 null。"
+    "自殺想法是第 6 題附加題，獨立評分，不納入五題總分。"
+)
+
+
 def build_bsrs_prompt(
     deidentified_transcript: str,
     voice_emotion: dict | None,
@@ -28,27 +42,18 @@ def build_bsrs_prompt(
     language: str = "zh-TW",
     generated_at: str | None = None,
     model_name: str = "<model-name>",
+    system_prompt: str | None = None,
 ) -> list[dict[str, str]]:
     emotion_json = json.dumps(voice_emotion or {}, ensure_ascii=False, indent=2)
     item_json = json.dumps(BSRS_ITEM_DEFINITIONS, ensure_ascii=False, indent=2)
     core_dimensions_json = json.dumps(CORE_DIMENSIONS, ensure_ascii=False, indent=2)
     distress_bands_json = json.dumps(DISTRESS_BANDS, ensure_ascii=False, indent=2)
     generated_at = generated_at or datetime.now(timezone.utc).isoformat()
+    system_content = (system_prompt or DEFAULT_BSRS_SYSTEM_PROMPT).strip()
     return [
         {
             "role": "system",
-            "content": (
-                "你是協助醫療專業人員進行情緒困擾篩檢的臨床助理。"
-                "請輸出 schema_version 1.1.0 的 BSRS-5 心情溫度計 AI 輔助評估草稿。"
-                "這不是診斷；所有分數都需要醫療專業人員確認。"
-                "所有可自由生成的中文欄位請使用繁體中文與台灣用語，不要輸出簡體字。"
-                "若對話資訊不足，estimated_score 必須是 null，assessment_status 應為 needs_direct_confirmation 或 not_assessed。"
-                "不要把沒有提及的症狀推論為完全沒有。"
-                "臨床訪談中患者常會淡化、合理化或否認症狀；評分時請優先看具體生活證據、睡眠變化、功能受損、家人觀察、行為反應與安全語句。"
-                "不需要患者直接說出量表題目名稱；若有足夠間接證據，仍可估分，並在 model_confidence 與 rationale_summary 說明患者有淡化或否認。"
-                "只有完全沒有相關線索、ASR 內容無法判讀，或證據互相矛盾到無法估計時，核心五題才使用 null。"
-                "自殺想法是第 6 題附加題，獨立評分，不納入五題總分。"
-            ),
+            "content": system_content,
         },
         {
             "role": "user",
@@ -105,6 +110,8 @@ def infer_bsrs_json(
     session_id: str = "demo-001",
     language: str = "zh-TW",
     max_output_tokens: int = 6000,
+    system_prompt: str | None = None,
+    reasoning_effort: str | None = None,
 ) -> dict[str, Any]:
     if not os.getenv("OPENAI_API_KEY"):
         raise RuntimeError("Missing OPENAI_API_KEY. Add it to .env or the environment before running the BSRS step.")
@@ -116,17 +123,18 @@ def infer_bsrs_json(
 
     client = OpenAI()
     generated_at = datetime.now(timezone.utc).isoformat()
-    response = client.responses.create(
-        model=model,
-        input=build_bsrs_prompt(
+    request: dict[str, Any] = {
+        "model": model,
+        "input": build_bsrs_prompt(
             deidentified_transcript,
             voice_emotion,
             session_id=session_id,
             language=language,
             generated_at=generated_at,
             model_name=model,
+            system_prompt=system_prompt,
         ),
-        text={
+        "text": {
             "format": {
                 "type": "json_schema",
                 "name": "bsrs_scale_report",
@@ -134,8 +142,12 @@ def infer_bsrs_json(
                 "strict": True,
             }
         },
-        max_output_tokens=max_output_tokens,
-    )
+        "max_output_tokens": max_output_tokens,
+    }
+    if reasoning_effort:
+        request["reasoning"] = {"effort": reasoning_effort}
+
+    response = client.responses.create(**request)
     report = json.loads(_response_text(response))
     return normalize_bsrs_report(
         report,

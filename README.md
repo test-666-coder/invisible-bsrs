@@ -216,10 +216,11 @@ flowchart TD
 
 ### 目前實作
 
-- 語音轉逐字稿：預設 `openai/whisper-tiny` 本地 ASR，可改 `openai/whisper-small` 提高辨識品質。
+- 語音轉逐字稿：預設 `faster-whisper` + `Systran/faster-whisper-medium`，比 tiny/small 更穩，並使用量化推論降低顯卡記憶體壓力。
 - 語音轉心情：預設 `Dpngtm/wav2vec2-emotion-recognition` 本地語音情緒分類。
 - 逐字稿去識別化：預設 `ckiplab/albert-tiny-chinese-ner` 加上 regex 遮蔽個資。
-- 逐字稿與心情轉量表：使用 OpenAI API Structured Outputs 產生 `schema_version=1.1.0` 的 BSRS JSON。
+- 逐字稿與心情轉量表：使用 OpenAI API Structured Outputs 產生 `schema_version=1.1.0` 的 BSRS JSON，預設模型為 `gpt-5.6-sol`。
+- BSRS system prompt：預設讀取 `prompts/bsrs_system_prompt.txt`，可直接編輯此檔自訂評分角色與原則。
 
 ### 執行前端 demo
 
@@ -265,7 +266,17 @@ python -m patient_mood_pipeline.download_models
 python -m patient_mood_pipeline.run --audio .\samples\conversation.wav --session-id demo-001 --output .\outputs\result.json
 ```
 
-若語音轉文字錯誤率偏高，可把 `.env` 裡的 `ASR_MODEL_ID` 從 `openai/whisper-tiny` 改成 `openai/whisper-small`，並保留 `ASR_NUM_BEAMS=5`。顯卡記憶體足夠時可再改用更大的 Whisper 模型。
+目前預設使用 `ASR_BACKEND=faster-whisper` 與 `ASR_MODEL_ID=Systran/faster-whisper-medium`，並保留 `ASR_NUM_BEAMS=5` 來提高辨識穩定度。若硬體不足才降回 `openai/whisper-small` 或 `openai/whisper-tiny` 並把 `ASR_BACKEND` 改回 `transformers`。
+
+若要自訂逐字稿轉量表的 GPT system prompt，編輯 `prompts/bsrs_system_prompt.txt`，並確認 `.env` 有：
+
+```powershell
+OPENAI_BSRS_MODEL=gpt-5.6-sol
+OPENAI_BSRS_REASONING_EFFORT=xhigh
+BSRS_SYSTEM_PROMPT_FILE=prompts/bsrs_system_prompt.txt
+```
+
+改完後重新啟動本機模型服務。
 
 詳細架構請看 `docs/architecture.md`。
 

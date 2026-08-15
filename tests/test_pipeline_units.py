@@ -53,6 +53,17 @@ class PipelineUnitTests(unittest.TestCase):
         self.assertIn("患者常會淡化", text)
         self.assertNotIn("王小明", text)
 
+    def test_prompt_accepts_custom_system_prompt(self):
+        messages = build_bsrs_prompt(
+            "[NAME] 最近睡不好。",
+            None,
+            system_prompt="自訂 BSRS system prompt：請嚴格依照臨床訪談證據估分。",
+        )
+
+        self.assertEqual(messages[0]["role"], "system")
+        self.assertIn("自訂 BSRS system prompt", messages[0]["content"])
+        self.assertIn("[NAME] 最近睡不好。", messages[1]["content"])
+
     def test_prompt_keeps_manageable_stress_low_and_scores_direct_safety_denial(self):
         messages = build_bsrs_prompt("患者偶爾急一下但能察覺並修正。醫師問有沒有不想活，患者說完全沒有。", None)
         text = json.dumps(messages, ensure_ascii=False)

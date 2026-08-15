@@ -43,19 +43,35 @@ copy .env.example .env
 OPENAI_API_KEY=你的 OpenAI API key
 ```
 
+量表評分的 OpenAI 模型預設為：
+
+```text
+OPENAI_BSRS_MODEL=gpt-5.6-sol
+OPENAI_BSRS_REASONING_EFFORT=xhigh
+```
+
+逐字稿校正 agent 預設仍使用：
+
+```text
+OPENAI_TRANSCRIPT_MODEL=gpt-4o-mini
+```
+
 預設語音轉文字模型是：
 
 ```text
-ASR_MODEL_ID=openai/whisper-tiny
+ASR_BACKEND=faster-whisper
+ASR_MODEL_ID=Systran/faster-whisper-medium
+ASR_COMPUTE_TYPE=int8_float16
 ```
 
-如果語音辨識錯誤率太高，可以改成：
+如果硬體資源不足、模型載入失敗，可以暫時降成 Transformers small：
 
 ```text
+ASR_BACKEND=transformers
 ASR_MODEL_ID=openai/whisper-small
 ```
 
-`whisper-small` 下載較久、吃更多記憶體，但通常比 `tiny` 穩。
+`faster-whisper-medium` 下載較久、吃更多記憶體，但通常比 tiny/small 穩。
 
 ## 4. 下載本地模型
 
@@ -71,6 +87,29 @@ python -m patient_mood_pipeline.download_models
 HF_HUB_DISABLE_XET=1
 HF_HUB_DISABLE_SYMLINKS=1
 ```
+
+## 自訂 BSRS system prompt
+
+逐字稿與語音情緒送進 GPT 產生量表 JSON 時，system prompt 預設放在：
+
+```text
+prompts/bsrs_system_prompt.txt
+```
+
+直接修改這個檔案即可自訂評分角色、判斷原則與臨床語氣。請保留幾個重要邊界：
+
+- 這不是診斷，結果必須由醫療人員確認。
+- 資訊不足時不要硬猜分數。
+- 自殺想法是第六題附加題，不納入五題總分。
+- 不要把患者沒有說的症狀補寫進去。
+
+如果想改成其他 prompt 檔案，可以在 `.env` 設定：
+
+```text
+BSRS_SYSTEM_PROMPT_FILE=prompts/bsrs_system_prompt.txt
+```
+
+改完 prompt 或 `.env` 後，請重新啟動模型服務。
 
 ## 5. 安裝 UI 套件
 
@@ -166,14 +205,16 @@ python -m patient_mood_pipeline.run --audio .\samples\your_audio.wav --local-onl
 
 ### 語音轉文字錯誤率太高
 
-先確認音檔格式正常，建議使用清楚的單聲道 `.wav`。如果仍不穩，把 `.env` 改成：
+先確認音檔格式正常，建議使用清楚的單聲道 `.wav`。目前預設已改成：
 
 ```text
-ASR_MODEL_ID=openai/whisper-small
+ASR_BACKEND=faster-whisper
+ASR_MODEL_ID=Systran/faster-whisper-medium
 ASR_NUM_BEAMS=5
+ASR_VAD_FILTER=true
 ```
 
-改完後需要重新啟動模型服務。
+若還是不穩，可以考慮更大的 Whisper 模型或雲端 ASR，但 4GB 顯卡可能會遇到記憶體不足。改完後需要重新啟動模型服務。
 
 ### 想確認目前使用哪些模型
 

@@ -5,7 +5,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .config import default_output_path, load_config
+from .config import default_output_path, load_bsrs_system_prompt, load_config
 from .local_models import analyze_voice_emotion, deidentify_with_local_ner, transcribe_audio
 from .openai_bsrs import infer_bsrs_json
 from .openai_transcript import correct_deidentified_transcript
@@ -87,6 +87,8 @@ def run_pipeline(
             model=openai_model or config.openai_model,
             session_id=session_id,
             language=language,
+            system_prompt=load_bsrs_system_prompt(config),
+            reasoning_effort=config.openai_reasoning_effort,
         )
 
     debug_output = {
