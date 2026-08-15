@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>心情溫度計輔助分析台</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Clinical Conversation Support</p>
+        <h1>心情溫度計輔助分析台</h1>
+      </div>
+      <div class="topbar__actions" aria-label="主要操作">
+        <button class="ghost-button" id="sampleButton" type="button" title="載入範例逐字稿">
+          <span aria-hidden="true">＋</span>
+          範例
+        </button>
+        <button class="primary-button" id="analyzeButton" type="button" title="分析逐字稿">
+          <span aria-hidden="true">◎</span>
+          分析
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="panel input-panel" aria-labelledby="inputTitle">
+        <div class="panel__header">
+          <div>
+            <p class="section-kicker">01</p>
+            <h2 id="inputTitle">語音與逐字稿</h2>
+          </div>
+          <span class="status-pill" id="speechStatus">待命</span>
+        </div>
+
+        <div class="toolbar" aria-label="語音操作">
+          <button class="tool-button" id="startSpeechButton" type="button" title="開始語音轉逐字稿">
+            <span aria-hidden="true">▶</span>
+            開始
+          </button>
+          <button class="tool-button" id="stopSpeechButton" type="button" title="停止語音轉逐字稿" disabled>
+            <span aria-hidden="true">■</span>
+            停止
+          </button>
+          <button class="tool-button" id="clearButton" type="button" title="清空逐字稿">
+            <span aria-hidden="true">×</span>
+            清空
+          </button>
+        </div>
+
+        <label class="field-label" for="transcriptInput">醫病對話逐字稿</label>
+        <textarea
+          id="transcriptInput"
+          spellcheck="false"
+          placeholder="醫師：最近一週睡眠如何？
+患者：我幾乎每天都睡不好，也一直覺得很緊張..."
+        ></textarea>
+
+        <div class="metrics-strip" aria-label="語音心情摘要">
+          <div>
+            <span>語速</span>
+            <strong id="paceMetric">--</strong>
+          </div>
+          <div>
+            <span>音量起伏</span>
+            <strong id="energyMetric">--</strong>
+          </div>
+          <div>
+            <span>情緒</span>
+            <strong id="voiceMoodMetric">--</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel result-panel" aria-labelledby="resultTitle">
+        <div class="panel__header">
+          <div>
+            <p class="section-kicker">02</p>
+            <h2 id="resultTitle">量表結果</h2>
+          </div>
+          <span class="status-pill status-pill--accent" id="riskBadge">尚未分析</span>
+        </div>
+
+        <div class="thermometer" aria-label="心情溫度計總分">
+          <div class="thermometer__score">
+            <span id="totalScore">--</span>
+            <small>/ 20</small>
+          </div>
+          <div class="thermometer__track">
+            <div class="thermometer__fill" id="thermometerFill"></div>
+          </div>
+          <div class="thermometer__labels" aria-hidden="true">
+            <span>0</span>
+            <span>5</span>
+            <span>9</span>
+            <span>14</span>
+            <span>20</span>
+          </div>
+        </div>
+
+        <div class="risk-note" id="riskNote">
+          請先輸入逐字稿。結果僅供醫療專業人員作為篩檢參考。
+        </div>
+
+        <table class="scale-table">
+          <thead>
+            <tr>
+              <th scope="col">項目</th>
+              <th scope="col">分數</th>
+              <th scope="col">信心</th>
+              <th scope="col">依據</th>
+            </tr>
+          </thead>
+          <tbody id="scaleBody"></tbody>
+        </table>
+      </section>
+
+      <section class="panel output-panel" aria-labelledby="deidTitle">
+        <div class="panel__header">
+          <div>
+            <p class="section-kicker">03</p>
+            <h2 id="deidTitle">去識別化逐字稿</h2>
+          </div>
+          <button class="tool-button tool-button--compact" id="copyButton" type="button" title="複製報告">
+            <span aria-hidden="true">⧉</span>
+            複製
+          </button>
+        </div>
+        <pre class="transcript-output" id="deidentifiedOutput">尚未產生</pre>
+      </section>
+
+      <section class="panel output-panel" aria-labelledby="reportTitle">
+        <div class="panel__header">
+          <div>
+            <p class="section-kicker">04</p>
+            <h2 id="reportTitle">臨床摘要</h2>
+          </div>
+          <button class="tool-button tool-button--compact" id="exportButton" type="button" title="匯出 JSON">
+            <span aria-hidden="true">⇩</span>
+            匯出
+          </button>
+        </div>
+        <div class="summary-grid">
+          <div>
+            <span>主要情緒</span>
+            <strong id="dominantMood">--</strong>
+          </div>
+          <div>
+            <span>喚起程度</span>
+            <strong id="arousalLevel">--</strong>
+          </div>
+          <div>
+            <span>自殺意念</span>
+            <strong id="suicideScore">--</strong>
+          </div>
+        </div>
+        <pre class="report-output" id="clinicalReport">尚未產生</pre>
+      </section>
+    </main>
+
+    <script src="src/analyzer.js"></script>
+    <script src="src/app.js"></script>
+  </body>
+</html>

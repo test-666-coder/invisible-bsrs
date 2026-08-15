@@ -204,3 +204,50 @@ flowchart TD
 ## 重要聲明
 
 本專案旨在探索醫療對話整理與心理風險篩檢的輔助方式，不能取代專業評估、正式量表、診斷或治療。若本人或身邊的人有立即自傷或自殺風險，請立刻聯絡所在地的緊急服務或尋求合格專業人員協助。
+
+## 程式與模型管線
+
+此 repo 也包含一套可執行的原型程式：
+
+- 前端 demo：可貼上逐字稿，快速展示去識別化、情緒線索與 BSRS-5 結果。
+- 模型管線：本地 Hugging Face 模型處理語音與個資，最後用 OpenAI API 產生結構化 BSRS JSON。
+
+### 目前實作
+
+- 語音轉逐字稿：預設 `openai/whisper-small` 本地 ASR。
+- 語音轉心情：預設 `Dpngtm/wav2vec2-emotion-recognition` 本地語音情緒分類。
+- 逐字稿去識別化：預設 `ckiplab/albert-tiny-chinese-ner` 加上 regex 遮蔽個資。
+- 逐字稿與心情轉量表：使用 OpenAI API Structured Outputs 產生 `schema_version=1.1.0` 的 BSRS JSON。
+
+### 執行前端 demo
+
+```powershell
+python -m http.server 5173 --bind 127.0.0.1
+```
+
+然後開啟 `http://127.0.0.1:5173/`。
+
+### 執行完整模型管線
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+copy .env.example .env
+python -m patient_mood_pipeline.download_models
+python -m patient_mood_pipeline.run --audio .\samples\conversation.wav --session-id demo-001 --output .\outputs\result.json
+```
+
+詳細架構請看 `docs/architecture.md`。
+
+正式輸出的 JSON 頂層會是：
+
+- `session`
+- `instrument`
+- `assessment.core_items`
+- `assessment.core_result`
+- `assessment.supplemental_item`
+- `clinical_review`
+- `analysis_metadata`
+
+其中 `core_result.total_score` 只加總前五題；`suicide_ideation` 是第六題附加題，不納入五題總分。
