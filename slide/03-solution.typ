@@ -4,7 +4,7 @@
 
 #place(left + top, dx: margin-x, dy: 1.25in)[
   #box(width: content-w, fill: blush, radius: 6pt, inset: (x: 18pt, y: 13pt))[
-    #text(size: 23pt, weight: "bold", fill: wine)[從原始語音到可稽核的臨床輔助草稿]
+    #text(size: 23pt, weight: "bold", fill: wine)[把原始語音變成臨床輔助的工具]
     #v(0.06in)
     #text(size: 13.5pt, fill: muted)[本地模型處理聲音與個資，校對 Agent 修正逐字稿，最後產出具證據與人工確認欄位的結構化結果。]
   ]
