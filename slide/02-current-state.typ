@@ -6,9 +6,28 @@
   #deck-grid(columns: (1.52fr, 0.9fr), gutter: gap,
     panel([
       #tag("現況分析")
-      \
-      #text(size: 25pt, weight: "bold")[風險不是沒有出現\ 而是沒有被主動說出來]
       #v(0.04in)
+
+      #grid(columns: (1.05fr, 1.35fr), gutter: 15pt,
+        block[
+          #text(size: 10.5pt, weight: "bold", fill: wine)[問題規模｜114 年台灣]
+          #v(-0.05in)
+          #text(size: 32pt, weight: "bold", fill: wine)[3,951]
+          #text(size: 10.5pt, fill: muted)[ 人死於自殺]
+        ],
+        block[
+          #text(size: 15pt, weight: "bold")[不能只等患者主動求助]
+          #v(0.09in)
+          #text(size: 12pt)[每十萬人口 16.9 人　｜　平均每天約 11 人]
+        ]
+      )
+
+      #v(0in)
+      #line(length: 100%, stroke: 0.8pt + sand)
+      #v(-0.1in)
+
+      #text(size: 25pt, weight: "bold")[風險不是沒有出現\ 而是沒有被主動說出來]
+      #v(-0.06in)
 
       #align(center)[
       #block(width: 100%)[
@@ -38,48 +57,30 @@
       )
       ]
       ]
-
-      #v(0in)
-      #line(length: 100%, stroke: 0.8pt + sand)
-      #v(0in)
-
-      #grid(columns: (1.05fr, 1.35fr), gutter: 15pt,
-        block[
-          #text(size: 10.5pt, weight: "bold", fill: wine)[問題規模｜114 年台灣]
-          #v(0.05in)
-          #text(size: 32pt, weight: "bold", fill: wine)[3,951]
-          #text(size: 10.5pt, fill: muted)[ 人死於自殺]
-        ],
-        block[
-          #text(size: 15pt, weight: "bold")[不能只等患者主動求助]
-          #v(0.09in)
-          #text(size: 12pt)[每十萬人口 16.9 人　｜　平均每天約 11 人]
-        ]
-      )
     ], fill: white, height: 4.95in),
 
     panel([
       #tag("第一階段 TA")
-      #v(0.18in)
+      #v(0in)
       #text(size: 19pt, weight: "bold", fill: wine)[身心科診所]
       #text(size: 19pt, weight: "bold", fill: wine)[心理諮商機構]
-      #v(0.22in)
+      #v(0.2in)
 
-      #text(size: 10.5pt, weight: "bold", fill: wine)[01｜誰買單]
-      #v(0.04in)
-      #text(size: 13.5pt, weight: "bold")[診所與諮商機構]
-      #v(0.16in)
+      #text(size: 12pt, weight: "bold", fill: wine)[01｜誰買單]
+      #v(0in)
+      #text(size: 15pt, weight: "bold")[診所與諮商機構]
+      #v(0.1in)
 
-      #text(size: 10.5pt, weight: "bold", fill: wine)[02｜誰使用]
-      #v(0.04in)
-      #text(size: 13.5pt, weight: "bold")[醫師、心理師、諮商師]
-      #v(0.16in)
+      #text(size: 12pt, weight: "bold", fill: wine)[02｜誰使用]
+      #v(0in)
+      #text(size: 15pt, weight: "bold")[醫師、心理師、諮商師]
+      #v(0.1in)
 
-      #text(size: 10.5pt, weight: "bold", fill: wine)[03｜要完成什麼工作]
-      #v(0.04in)
-      #text(size: 13.5pt, weight: "bold")[在有限時間內掌握]
-      #v(0.06in)
-      #text(size: 12.5pt)[線索　原文　待追問項目]
+      #text(size: 12pt, weight: "bold", fill: wine)[03｜要完成什麼工作]
+      #v(0in)
+      #text(size: 15pt, weight: "bold")[在有限時間內掌握]
+      #v(0.1in)
+      #text(size: 14pt)[線索　原文　待追問項目]
     ], fill: sand, height: 4.95in)
   )
 ]
