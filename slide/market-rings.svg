@@ -18,7 +18,7 @@
   <text x="418" y="207" fill="#8E1F1F" class="number">13,347</text>
   <text x="418" y="234" fill="#756965" class="body">醫療院所與心理機構</text>
 
-  <text x="300" y="240" fill="#FFFFFF" text-anchor="middle" class="eyebrow">SOM</text>
-  <text x="300" y="292" fill="#FFFFFF" text-anchor="middle" class="number">840</text>
-  <text x="300" y="321" fill="#FFFFFF" text-anchor="middle" class="body">心理專科場域</text>
+  <text x="300" y="226" fill="#FFFFFF" text-anchor="middle" class="eyebrow">SOM</text>
+  <text x="300" y="278" fill="#FFFFFF" text-anchor="middle" class="number">840</text>
+  <text x="300" y="307" fill="#FFFFFF" text-anchor="middle" class="body">心理專科場域</text>
 </svg>

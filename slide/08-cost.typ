@@ -41,14 +41,18 @@
   #block(width: content-w)[
     #text(size: 10pt, weight: "bold", tracking: 1.2pt, fill: wine)[首年成果]
     #v(0.10in)
-    #block(width: 100%, height: 0.66in, fill: white, radius: 5pt, inset: 10pt)[
-      #grid(columns: (1fr, auto, 1fr, auto, 1fr), column-gutter: 12pt,
-        [#align(center + horizon)[#text(size: 12pt, weight: "bold")[完成產品與安全管線]]],
-        [#align(center + horizon)[#text(size: 18pt, fill: gold)[→]]],
-        [#align(center + horizon)[#text(size: 12pt, weight: "bold")[封閉試辦與臨床檢驗]]],
-        [#align(center + horizon)[#text(size: 18pt, fill: gold)[→]]],
-        [#align(center + horizon)[#text(size: 12pt, weight: "bold")[依整合量增加人力預算]]],
-      )
+    #block(width: 100%, height: 0.66in, fill: white, radius: 5pt, inset: (x: 10pt, y: 0pt))[
+      #align(horizon)[
+        #block(width: 100%)[
+          #grid(columns: (1fr, auto, 1fr, auto, 1fr), column-gutter: 12pt,
+            [#align(center + horizon)[#text(size: 12pt, weight: "bold")[完成產品與安全管線]]],
+            [#align(center + horizon)[#text(size: 18pt, fill: gold)[→]]],
+            [#align(center + horizon)[#text(size: 12pt, weight: "bold")[封閉試辦與臨床檢驗]]],
+            [#align(center + horizon)[#text(size: 18pt, fill: gold)[→]]],
+            [#align(center + horizon)[#text(size: 12pt, weight: "bold")[依整合量增加人力預算]]],
+          )
+        ]
+      ]
     ]
   ]
 ]
