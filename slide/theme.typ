@@ -36,7 +36,7 @@
 #let deck-grid(..args) = block(width: content-w, grid(..args))
 
 #let tag(body, fill: red) = box(fill: fill, radius: 12pt, inset: (x: 14pt, y: 6pt))[
-  #text(size: 12pt, fill: white, weight: "bold")[ body]
+  #text(size: 12pt, fill: white, weight: "bold")[#body]
 ]
 
 #let bullet(body) = grid(columns: (9pt, 1fr), column-gutter: 8pt,
