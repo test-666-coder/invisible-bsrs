@@ -1,6 +1,6 @@
 #import "theme.typ": *
 
-#head("附錄", "成本明細｜一年如何算到 380 萬", "ANNUAL COST BUILD-UP", "A1")
+#head("附錄", "成本明細｜一年如何算到 380 萬", "A1 · ANNUAL COST BUILD-UP", "A1")
 
 #place(left + top, dx: margin-x, dy: 1.45in)[
   #block(width: content-w)[
@@ -44,7 +44,9 @@
   ]
 ]
 
-#place(bottom + left, dx: margin-x, dy: -0.58in)[
+#place(bottom + left, dx: margin-x, dy: -0.24in)[
   #text(size: 8.5pt, fill: muted)[薪資參考：104 薪資情報；其他項目依 MVP 開發、臨床與合規需求估算。]
 ]
 #footer("A1")
+#pagebreak()
+#include "11-appendix-landing.typ"

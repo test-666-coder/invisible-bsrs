@@ -1,13 +1,13 @@
 #import "theme.typ": *
 
 #head("參", "個資保護", "AI DRAFTS · CLINICIANS DECIDE", 4)
-// #place(left + top, dx: 4in, dy: 0.55in)[
-//   #box(width: 3.25in, fill: blush, radius: 17pt, inset: (x: 10pt, y: 4pt))[
-//     #align(center)[
-//       #text(size: 22pt, weight: "bold", fill: wine)[符合個資法第六條]
-//     ]
-//   ]
-// ]
+#place(left + top, dx: 4in, dy: 0.55in)[
+  #box(width: 4.35in, fill: blush, radius: 17pt, inset: (x: 10pt, y: 5pt))[
+    #align(center)[
+      #text(size: 14pt, weight: "bold", fill: wine)[個資法第六條｜依實際資料流逐案審查]
+    ]
+  ]
+]
 #place(left + top, dx: margin-x, dy: 1.7in)[
   #deck-grid(columns: (1fr, 1fr, 1fr, 1fr), gutter: gap,
     ..(("01", "即時轉錄", "完成轉錄後，原始音訊即時銷毀避免資料竊取。"),
