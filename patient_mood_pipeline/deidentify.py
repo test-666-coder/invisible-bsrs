@@ -35,6 +35,7 @@ class DeidentificationResult:
 
 
 REGEX_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
+    ("MOBILE", re.compile(r"(?:手機|電話)\s*(?:是|為|:|：)\s*((?:[零〇○一二三四五六七八九0-9][\s-]*){8,12})")),
     ("FIELD_VALUE", re.compile(r"(姓名|病歷號|身分證|電話|手機|地址|生日|出生日期|電子郵件|email)\s*[:：]\s*[^\n，。；;]+", re.I)),
     ("NATIONAL_ID", re.compile(r"\b[A-Z][12]\d{8}\b", re.I)),
     ("EMAIL", re.compile(r"\b[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}\b")),
@@ -45,7 +46,8 @@ REGEX_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("DATE", re.compile(r"\d{1,2}\s*月\s*\d{1,2}\s*日")),
     ("ADDRESS", re.compile(r"(?:臺北|台北|新北|桃園|臺中|台中|臺南|台南|高雄|基隆|新竹|苗栗|彰化|南投|雲林|嘉義|屏東|宜蘭|花蓮|臺東|台東|澎湖|金門|連江)[市縣][^，。；;\n]{0,28}(?:路|街|巷|弄|號)")),
     ("ORGANIZATION", re.compile(r"[\u4e00-\u9fa5]{2,16}(?:醫院|診所|公司|學校|大學|機構)")),
-    ("NAME", re.compile(r"(?:我叫|我是|姓名[:：]?)\s*([\u4e00-\u9fa5]{2,4})")),
+    ("NAME", re.compile(r"(?:我叫|姓名[:：]?)\s*([\u4e00-\u9fa5]{2,4})")),
+    ("NAME", re.compile(r"我是\s*([陳林黃張李王吳劉蔡楊許鄭謝郭洪邱曾廖賴徐周葉蘇莊呂江何蕭羅高簡朱鍾施游詹沈彭胡余盧潘顏梁趙柯翁魏孫戴范方宋鄧杜侯曹薛傅丁溫紀][\u4e00-\u9fa5]{1,2})")),
     ("NAME_TITLE", re.compile(r"[陳林黃張李王吳劉蔡楊許鄭謝郭洪邱曾廖賴徐周葉蘇莊呂江何蕭羅高簡朱鍾施游詹沈彭胡余盧潘顏梁趙柯翁魏孫戴范方宋鄧杜侯曹薛傅丁溫紀][\u4e00-\u9fa5]{1,2}(?:先生|小姐|女士|太太|醫師|醫生|主任|護理師)")),
 ]
 
@@ -59,6 +61,22 @@ NER_LABEL_MAP = {
     "FAC": "LOCATION",
     "DATE": "DATE",
     "TIME": "DATE",
+}
+
+GENERIC_TIME_TERMS = {
+    "今天",
+    "昨天",
+    "前天",
+    "明天",
+    "最近",
+    "這幾天",
+    "这几天",
+    "這幾",
+    "这几",
+    "半夜",
+    "每天",
+    "一週",
+    "一周",
 }
 
 
@@ -85,7 +103,7 @@ def _regex_redactions(text: str) -> list[Redaction]:
     redactions: list[Redaction] = []
     for label, pattern in REGEX_PATTERNS:
         for match in pattern.finditer(text):
-            start, end = match.span(1) if label == "NAME" and match.lastindex else match.span()
+            start, end = match.span(1) if label in {"MOBILE", "NAME"} and match.lastindex else match.span()
             redactions.append(Redaction(start=start, end=end, label=label, source="regex", text=text[start:end]))
     return redactions
 
@@ -101,13 +119,17 @@ def _ner_redactions(text: str, entities: Iterable[dict]) -> list[Redaction]:
             continue
         if int(end) <= int(start):
             continue
+        entity_text = text[int(start) : int(end)]
+        stripped = entity_text.strip()
+        if label == "DATE" and (stripped in GENERIC_TIME_TERMS or (len(stripped) <= 4 and not re.search(r"\d", stripped))):
+            continue
         redactions.append(
             Redaction(
                 start=int(start),
                 end=int(end),
                 label=label,
                 source="ner",
-                text=text[int(start) : int(end)],
+                text=entity_text,
             )
         )
     return redactions

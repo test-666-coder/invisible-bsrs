@@ -2,7 +2,9 @@ import json
 import unittest
 
 from patient_mood_pipeline.deidentify import redact_text
+from patient_mood_pipeline.local_models import summarize_emotion_scores
 from patient_mood_pipeline.openai_bsrs import build_bsrs_prompt, normalize_bsrs_report
+from patient_mood_pipeline.openai_transcript import build_transcript_correction_prompt
 from patient_mood_pipeline.schemas import BSRS_REPORT_SCHEMA, SCHEMA_VERSION
 
 
@@ -15,6 +17,31 @@ class PipelineUnitTests(unittest.TestCase):
         self.assertNotIn("A123456789", result.text)
         self.assertIn("[FIELD_VALUE]", result.text)
 
+    def test_regex_deidentification_removes_spoken_mobile_number(self):
+        text = "我叫王小明，手機是零九一二三四五六七八最近幾乎每天都睡不好。"
+        result = redact_text(text)
+        self.assertNotIn("王小明", result.text)
+        self.assertNotIn("零九一二三四五六七八", result.text)
+        self.assertIn("最近幾乎每天都睡不好", result.text)
+
+    def test_deidentification_does_not_remove_self_criticism_as_name(self):
+        text = "患者說，我是很糟，覺得自己很沒用。"
+        result = redact_text(text)
+        self.assertIn("我是很糟", result.text)
+        self.assertIn("覺得自己很沒用", result.text)
+
+    def test_deidentification_keeps_generic_clinical_time_terms(self):
+        text = "最近每天睡不好，半夜會醒來，這幾天心情低落。"
+        ner_entities = [
+            {"entity_group": "DATE", "start": 0, "end": 2},
+            {"entity_group": "TIME", "start": 8, "end": 10},
+            {"entity_group": "DATE", "start": 14, "end": 17},
+        ]
+        result = redact_text(text, ner_entities)
+        self.assertIn("最近每天睡不好", result.text)
+        self.assertIn("半夜會醒來", result.text)
+        self.assertIn("這幾天心情低落", result.text)
+
     def test_prompt_uses_deidentified_transcript(self):
         messages = build_bsrs_prompt("[NAME] 最近睡不好，也很焦慮。", {"dominant_label": "sad"})
         text = json.dumps(messages, ensure_ascii=False)
@@ -22,7 +49,37 @@ class PipelineUnitTests(unittest.TestCase):
         self.assertIn("BSRS-5", text)
         self.assertIn("sleep_disturbance", text)
         self.assertIn("suicide_ideation", text)
+        self.assertIn("間接證據", text)
+        self.assertIn("患者常會淡化", text)
         self.assertNotIn("王小明", text)
+
+    def test_transcript_correction_prompt_preserves_deidentified_placeholders(self):
+        messages = build_transcript_correction_prompt("[NAME] 手機是[MOBILE]，最近睡不好。")
+        text = json.dumps(messages, ensure_ascii=False)
+        self.assertIn("[NAME]", text)
+        self.assertIn("[MOBILE]", text)
+        self.assertIn("placeholders_to_preserve", text)
+        self.assertNotIn("王小明", text)
+
+    def test_transcript_correction_prompt_mentions_taiwan_mandarin(self):
+        messages = build_transcript_correction_prompt("一時問：最近食育怎麼樣？換者說胸口僅僅。")
+        text = json.dumps(messages, ensure_ascii=False)
+        self.assertIn("台灣華語", text)
+        self.assertIn("食慾", text)
+        self.assertIn("胸口緊緊", text)
+
+    def test_voice_emotion_summary_adds_finer_profile(self):
+        profile = summarize_emotion_scores(
+            [
+                {"label": "angry", "score": 0.7},
+                {"label": "fearful", "score": 0.2},
+                {"label": "sad", "score": 0.1},
+            ]
+        )
+        self.assertEqual(profile["dominant_emotion"]["zh_label"], "煩躁/生氣")
+        self.assertEqual(profile["dimensional_scores"]["valence_label"], "負向")
+        self.assertEqual(profile["dimensional_scores"]["arousal_label"], "高")
+        self.assertGreater(profile["dimensional_scores"]["agitation_score"], 0.8)
 
     def test_schema_is_strict_object(self):
         self.assertEqual(BSRS_REPORT_SCHEMA["type"], "object")

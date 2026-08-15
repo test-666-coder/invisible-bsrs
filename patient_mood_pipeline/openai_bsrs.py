@@ -42,6 +42,9 @@ def build_bsrs_prompt(
                 "這不是診斷；所有分數都需要醫療專業人員確認。"
                 "若對話資訊不足，estimated_score 必須是 null，assessment_status 應為 needs_direct_confirmation 或 not_assessed。"
                 "不要把沒有提及的症狀推論為完全沒有。"
+                "臨床訪談中患者常會淡化、合理化或否認症狀；評分時請優先看具體生活證據、睡眠變化、功能受損、家人觀察、行為反應與安全語句。"
+                "不需要患者直接說出量表題目名稱；若有足夠間接證據，仍可估分，並在 model_confidence 與 rationale_summary 說明患者有淡化或否認。"
+                "只有完全沒有相關線索、ASR 內容無法判讀，或證據互相矛盾到無法估計時，核心五題才使用 null。"
                 "自殺想法是第 6 題附加題，獨立評分，不納入五題總分。"
             ),
         },
@@ -67,6 +70,9 @@ def build_bsrs_prompt(
                 "分數定義：0=完全沒有，1=輕微，2=中等程度，3=厲害，4=非常厲害。"
                 "value.score_label 必須和 estimated_score 對應；若 estimated_score 為 null，score_label 也必須是 null。\n"
                 "value.model_confidence 是 AI 信心，不是量表分數；可為 null。\n"
+                "間接證據評分規則：患者說「還好、只是累、沒那麼嚴重、不是憂鬱」不可直接視為 0 分；"
+                "若同段對話同時有反覆失眠、緊繃、功能下降、家人觀察、易衝動反應、自責或不想醒來等具體例子，"
+                "請依具體例子的頻率與影響估分，並將 evidence_sufficiency 設為 sufficient 或 partial。\n"
                 "core_result.total_score 只能加總五個核心題目。只有五題 estimated_score 都不是 null 時，calculation_status 才能是 complete。\n"
                 "五題總分分級如下：\n"
                 f"{distress_bands_json}\n\n"
@@ -89,7 +95,7 @@ def infer_bsrs_json(
     model: str,
     session_id: str = "demo-001",
     language: str = "zh-TW",
-    max_output_tokens: int = 1800,
+    max_output_tokens: int = 6000,
 ) -> dict[str, Any]:
     if not os.getenv("OPENAI_API_KEY"):
         raise RuntimeError("Missing OPENAI_API_KEY. Add it to .env or the environment before running the BSRS step.")

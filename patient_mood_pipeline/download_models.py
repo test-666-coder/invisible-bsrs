@@ -23,7 +23,7 @@ def main(argv: list[str] | None = None) -> int:
 
     for model_id in model_ids:
         print(f"Downloading {model_id} ...")
-        snapshot_download(repo_id=model_id, cache_dir=config.hf_cache_dir)
+        snapshot_download(repo_id=model_id)
     print("Done.")
     return 0
 
