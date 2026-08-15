@@ -1,26 +1,58 @@
 #import "theme.typ": *
 
-#head("柒", "成本分析", "COST DRIVERS · REVENUE LOGIC", 8)
-#place(left + top, dx: margin-x, dy: content-y)[
-  #deck-grid(columns: (1.25fr, 0.75fr), gutter: gap,
-    panel([
-      #text(size: 20pt, weight: "bold", fill: wine)[主要成本結構] #v(0.2in)
-      #grid(columns: (1fr, 1fr), gutter: 12pt,
-        ..(("AI 推論", "語音轉錄與 LLM 分析用量"), ("產品開發", "前端、後端與系統整合"), ("安全合規", "去識別、加密、稽核與審查"), ("維運服務", "監控、客服、模型與提示版本管理")).map(((title, body)) => block(fill: cream, radius: 5pt, inset: 13pt)[#text(size: 15pt, weight: "bold")[#title] #linebreak() #text(size: 12.5pt, fill: muted)[#body]]))
-      #v(0.22in)
-      #box(width: 100%, fill: blush, radius: 5pt, inset: 14pt)[#text(size: 15pt, weight: "bold", fill: wine)[單位成本公式] #linebreak() #text(size: 14pt)[每月固定成本 ＋ 單次轉錄／分析成本 × 使用量]]
-    ], fill: white, height: 4.95in),
-    panel([
-      #tag("收入對應") #v(0.28in)
-      #text(size: 20pt, weight: "bold")[讓收費結構覆蓋不同成本來源] #v(0.2in)
-      #bullet[訂閱費支應產品與日常維運] #v(0.12in)
-      #bullet[用量費反映 AI 推論成本] #v(0.12in)
-      #bullet[整合費涵蓋 HIS／EMR 導入] #v(0.12in)
-      #bullet[私有部署另計環境與稽核成本]
-      #v(0.3in)
-      #text(size: 13pt, fill: muted)[正式定價須在試辦後，依實際使用量、導入工時與院所採購意願驗證。]
-    ], fill: sand, height: 4.95in)
-  )
+#head("柒", "首年控制在 380 萬內", "COST MIX · BURN · COVERAGE", 8)
+
+#place(left + top, dx: 0.72in, dy: 1.48in)[
+  #image("cost-donut.svg", width: 4.62in)
+]
+
+#place(left + top, dx: 5.62in, dy: 1.72in)[
+  #block(width: 2.20in)[
+    #text(size: 13pt, weight: "bold", fill: wine)[70%]
+    #text(size: 13pt, weight: "bold")[ 產品與工程]
+    #v(0.16in)
+    #text(size: 13pt, weight: "bold", fill: red)[15%]
+    #text(size: 13pt, weight: "bold")[ 臨床與合規]
+    #v(0.16in)
+    #text(size: 13pt, weight: "bold", fill: gold)[10%]
+    #text(size: 13pt, weight: "bold")[ 設備與雲端]
+    #v(0.16in)
+    #text(size: 13pt, weight: "bold", fill: muted)[5%]
+    #text(size: 13pt, weight: "bold")[ 工具與預備]
+  ]
+]
+
+#place(left + top, dx: 8.50in, dy: 1.65in)[
+  #block(width: 4.12in, stroke: (left: 1pt + sand), inset: (left: 0.36in))[
+    #tag("營運尺度") #v(0.25in)
+    #text(size: 12pt, weight: "bold", fill: muted)[平均每月支出]
+    #linebreak()
+    #text(size: 30pt, weight: "bold", fill: wine)[27–32 萬]
+    #v(0.22in)
+    #text(size: 12pt, weight: "bold", fill: muted)[100 家分層收入組合]
+    #linebreak()
+    #text(size: 30pt, weight: "bold", fill: wine)[ARR 約 790 萬]
+    #v(0.22in)
+    #line(length: 100%, stroke: 1pt + sand)
+    #v(0.14in)
+    #text(size: 14pt, weight: "bold")[收入可覆蓋核心營運，]
+    #linebreak()
+    #text(size: 14pt, weight: "bold")[並支應後續產品擴張。]
+  ]
+]
+
+#place(left + top, dx: margin-x, dy: 5.95in)[
+  #block(width: content-w, height: 0.72in, fill: white, radius: 5pt, inset: 11pt)[
+    #grid(columns: (auto, 1fr, auto, 1fr, auto, 1fr), column-gutter: 10pt,
+      [#text(size: 11pt, weight: "bold", fill: wine)[MVP]], [#text(size: 10.5pt)[完成產品與安全管線]],
+      [#text(size: 18pt, fill: sand)[→]], [#text(size: 10.5pt)[封閉試辦與臨床檢驗]],
+      [#text(size: 18pt, fill: sand)[→]], [#text(size: 10.5pt)[依整合量增加人力預算]],
+    )
+  ]
+]
+
+#place(bottom + left, dx: margin-x, dy: -0.58in)[
+  #text(size: 8.5pt, fill: muted)[金額為 MVP 階段年度規劃值；詳細計算見附錄 A1。]
 ]
 #footer(8)
 #pagebreak()
