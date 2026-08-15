@@ -10,15 +10,15 @@
 
       #grid(columns: (1.05fr, 1.35fr), gutter: 15pt,
         block[
-          #text(size: 10.5pt, weight: "bold", fill: wine)[問題規模｜114 年台灣]
+          #text(size: 12pt, weight: "bold", fill: wine)[問題規模｜114 年台灣]
           #v(-0.05in)
           #text(size: 32pt, weight: "bold", fill: wine)[3,951]
-          #text(size: 10.5pt, fill: muted)[ 人死於自殺]
+          #text(size: 12pt, fill: muted)[ 人死於自殺]
         ],
         block[
           #text(size: 15pt, weight: "bold")[不能只等患者主動求助]
           #v(0.09in)
-          #text(size: 12pt)[每十萬人口 16.9 人　｜　平均每天約 11 人]
+          #text(size: 13.5pt)[每十萬人口 16.9 人　｜　平均每天約 11 人]
         ]
       )
 
@@ -33,7 +33,7 @@
       #block(width: 100%)[
       #grid(columns: (2.85in, 0.3in, 1fr), gutter: 8pt, align: left,
         block(width: 100%, fill: cream, radius: 6pt, inset: 12pt, height: 1.32in)[
-          #text(size: 10.5pt, fill: muted)[量表上的回答]
+          #text(size: 12pt, fill: muted)[量表上的回答]
           #v(-0.1in)
           #box(width: 100%, fill: white, radius: 6pt, stroke: 2pt + sand, inset: 8pt)[
             #grid(columns: (18pt, 1fr), column-gutter: 8pt, align: horizon,
@@ -44,15 +44,15 @@
             )
           ]
           #v(-0.1in)
-          #text(size: 10pt, fill: muted)[仰賴患者主動承認]
+          #text(size: 11.5pt, fill: muted)[仰賴患者主動承認]
         ],
         align(center + horizon)[#text(size: 22pt, weight: "bold", fill: wine)[≠]],
         block(width: 100%, fill: blush, radius: 6pt, inset: 12pt, height: 1.32in)[
-          #text(size: 10.5pt, fill: wine)[自然對話中的線索]
+          #text(size: 12pt, fill: wine)[自然對話中的線索]
           #v(-0.1in)
           #text(size: 20pt, weight: "bold", fill: wine)[「X你XXX，我沒有易怒」]
           #v(-0.1in)
-          #text(size: 10pt, fill: muted)[症狀已經出現在敘事裡]
+          #text(size: 11.5pt, fill: muted)[症狀已經出現在敘事裡]
         ]
       )
       ]
@@ -88,7 +88,7 @@
 #place(bottom + left, dx: margin-x, dy: -0.34in)[
 ]
 #place(bottom + right, dx: -margin-x, dy: -0.14in)[
-  #text(size: 8pt, fill: muted)[資料：衛福部「114 年國人死因統計結果」]
+  #text(size: 9.5pt, fill: muted)[資料：衛福部「114 年國人死因統計結果」]
 ]
 #footer(2)
 #pagebreak()
