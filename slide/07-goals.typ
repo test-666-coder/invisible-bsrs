@@ -1,6 +1,6 @@
 #import "theme.typ": *
 
-#head("陸", "短中長期目標", "VALIDATE LOCALLY · SCALE RESPONSIBLY", 7)
+#head("伍", "短中長期目標", "VALIDATE LOCALLY · SCALE RESPONSIBLY", 6)
 
 #place(left + top, dx: margin-x, dy: 1.34in)[
   #block(width: content-w, height: 3.05in, radius: 10pt, clip: true)[
@@ -36,5 +36,5 @@
     ]
   )
 ]
-#footer(7)
+#footer(6)
 #pagebreak()

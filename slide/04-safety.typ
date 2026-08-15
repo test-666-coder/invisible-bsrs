@@ -1,6 +1,6 @@
 #import "theme.typ": *
 
-#head("參", "個資保護", "AI DRAFTS · CLINICIANS DECIDE", 4)
+#head("肆", "個資保護", "AI DRAFTS · CLINICIANS DECIDE", 5)
 #place(left + top, dx: 4in, dy: 0.55in)[
   #box(width: 4.35in, fill: blush, radius: 17pt, inset: (x: 10pt, y: 5pt))[
     #align(center)[
@@ -22,5 +22,5 @@
     panel([#text(size: 30pt, weight: "bold")[系統不會做] #v(-0.12in) #bullet[自行診斷或判定自殺意圖] #v(0.08in) #bullet[將病患對話直接傳輸給外部 API]], fill: sand, height: 2.08in)
   )
 ]
-#footer(4)
+#footer(5)
 #pagebreak()

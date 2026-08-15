@@ -1,6 +1,6 @@
 #import "theme.typ": *
 
-#head("伍", "840 家切入，100 家可達 ARR 790 萬", "MARKET · PRICING · EXPANSION", 6)
+#head("陸", "840 家切入，100 家可達 ARR 790 萬", "MARKET · PRICING · EXPANSION", 7)
 
 // Left: one dominant market visual with its own protected caption zone.
 #place(left + top, dx: 0.75in, dy: 1.45in)[
@@ -75,5 +75,5 @@
 #place(bottom + left, dx: margin-x, dy: -0.58in)[
   #text(size: 8.4pt, fill: muted)[SOM：840 家心理專科場域｜SAM：12,922 家醫療院所＋425 家心理機構｜TAM：再納入高中職與大專輔導體系。圈層為範圍示意；定價為本案建議方案。]
 ]
-#footer(6)
+#footer(7)
 #pagebreak()
