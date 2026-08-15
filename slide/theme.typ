@@ -22,7 +22,7 @@
 #let head(no, title, en, n) = {
   place(top + left, dx: 0.46in, dy: 0.42in)[
     #block[
-      #text(size: 25pt, weight: "bold", fill: ink)[#no、#title]
+      #text(size: 35pt, weight: "bold", fill: ink)[#no、#title]
       #linebreak()
       #text(size: 7.2pt, weight: "bold", tracking: 1.4pt, fill: muted)[#en]
     ]

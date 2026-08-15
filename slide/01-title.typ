@@ -11,9 +11,9 @@
   #text(size: 24pt, weight: "bold", fill: ink)[用傾聽取代填表，讓求救訊號被看見]
 ]
 #place(right + horizon, dx: -0.72in, dy: -0.12in)[
-  #box(width: 3.5in, height: 3.5in, fill: wine, radius: 50%)[
+  #box(width: 4.0in, height: 3.5in, fill: wine, radius: 50%)[
     #align(center + horizon)[
-      #text(size: 64pt, weight: "bold", fill: white)[05]
+      #text(size: 64pt, weight: "bold", fill: white)[BSRS-5]
       #linebreak()
       #text(size: 12pt, tracking: 2pt, fill: white)[SIGNALS · ONE CONVERSATION]
     ]
