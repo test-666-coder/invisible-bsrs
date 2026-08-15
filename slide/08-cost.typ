@@ -1,13 +1,13 @@
 #import "theme.typ": *
 
-#head("柒", "323–380 萬，換來一年的產品與試辦能力", "COST MIX · BURN · COVERAGE", 8)
+#head("柒", "首年 323–380 萬，完成產品與封閉試辦", "COST MIX · BURN · COVERAGE", 8)
 
 // Cost chart and legend form one centered visual group.
-#place(left + top, dx: 0.62in, dy: 1.48in)[
-  #image("cost-donut.svg", width: 4.48in)
+#place(left + top, dx: 0.62in, dy: 1.42in)[
+  #image("cost-donut.svg", width: 4.00in)
 ]
 
-#place(left + top, dx: 4.82in, dy: 1.72in)[
+#place(left + top, dx: 4.80in, dy: 2.78in)[
   #block(width: 2.48in)[
     #grid(columns: (0.52in, 1fr), row-gutter: 14pt,
       [#text(size: 15pt, weight: "bold", fill: wine)[70%]], [#text(size: 14pt, weight: "bold")[產品與工程]],
@@ -19,8 +19,8 @@
 ]
 
 // Right: two operating metrics and one explicit business conclusion.
-#place(left + top, dx: 7.68in, dy: 1.48in)[
-  #block(width: 4.92in, stroke: (left: 1pt + sand), inset: (left: 0.38in))[
+#place(left + top, dx: 7.20in, dy: 1.48in)[
+  #block(width: 5.35in, stroke: (left: 1pt + sand), inset: (left: 0.38in))[
     #text(size: 10pt, weight: "bold", tracking: 1.4pt, fill: wine)[營運尺度]
     #v(0.19in)
     #text(size: 12pt, weight: "bold", fill: muted)[平均每月支出]

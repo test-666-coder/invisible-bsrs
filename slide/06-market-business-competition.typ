@@ -1,14 +1,14 @@
 #import "theme.typ": *
 
-#head("伍", "840 家起步，100 家客戶可達 ARR 約 790 萬", "MARKET · PRICING · EXPANSION", 6)
+#head("伍", "840 家切入，100 家可達 ARR 790 萬", "MARKET · PRICING · EXPANSION", 6)
 
 // Left: one dominant market visual with its own protected caption zone.
-#place(left + top, dx: 0.62in, dy: 1.38in)[
-  #image("market-rings.svg", width: 5.48in)
+#place(left + top, dx: 0.75in, dy: 1.45in)[
+  #image("market-rings.svg", width: 5.15in)
 ]
 
-#place(left + top, dx: 0.73in, dy: 5.64in)[
-  #block(width: 5.08in)[
+#place(left + top, dx: 0.67in, dy: 5.86in)[
+  #block(width: 5.15in)[
     #align(center)[
       #text(size: 10pt, weight: "bold", tracking: 1.1pt, fill: wine)[擴張順序]
       #v(0.08in)
@@ -22,8 +22,8 @@
 ]
 
 // Right: a pricing ladder rather than a stack of unrelated cards.
-#place(left + top, dx: 6.72in, dy: 1.42in)[
-  #block(width: 5.92in)[
+#place(left + top, dx: 6.35in, dy: 1.50in)[
+  #block(width: 6.40in)[
     #text(size: 10pt, weight: "bold", tracking: 1.4pt, fill: wine)[分層定價]
     #v(0.10in)
     #text(size: 20pt, weight: "bold")[同一套引擎，依導入深度收費]

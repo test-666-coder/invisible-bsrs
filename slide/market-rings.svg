@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="620" height="520" viewBox="0 0 620 520">
   <style>
     text { font-family: "Noto Sans CJK TC", "PingFang TC", sans-serif; }
-    .eyebrow { font-size: 17px; font-weight: 700; letter-spacing: 2px; }
-    .number { font-size: 40px; font-weight: 800; }
-    .body { font-size: 15px; font-weight: 500; }
+    .eyebrow { font-size: 18px; font-weight: 700; letter-spacing: 2px; }
+    .number { font-size: 44px; font-weight: 800; }
+    .body { font-size: 18px; font-weight: 500; }
   </style>
 
   <circle cx="300" cy="260" r="245" fill="#E8DED1"/>
