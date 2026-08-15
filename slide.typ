@@ -11,6 +11,13 @@
 #let gold = rgb("#C89A35")
 #let muted = rgb("#756965")
 
+// 16:9 layout grid: 0.58in side margins, 1.35in content start,
+// and a protected footer baseline at 7.26in.
+#let margin-x = 0.58in
+#let content-w = 12.173in
+#let content-y = 1.35in
+#let gap = 0.18in
+
 #let footer(n) = place(
   bottom + left,
   dx: 0.46in,
@@ -43,12 +50,13 @@
     )
   ]
   brand()
-  footer(n)
 }
 
-#let panel(body, fill: white, inset: 18pt, radius: 7pt, stroke: none) = block(
-  width: 100%, height: 100%, fill: fill, inset: inset, radius: radius, stroke: stroke, body
+#let panel(body, fill: white, height: auto, inset: 18pt, radius: 7pt, stroke: none) = block(
+  width: 100%, height: height, fill: fill, inset: inset, radius: radius, stroke: stroke, body
 )
+
+#let deck-grid(..args) = block(width: content-w, grid(..args))
 
 #let tag(body, fill: red) = box(fill: fill, radius: 12pt, inset: (x: 14pt, y: 6pt))[
   #text(size: 12pt, fill: white, weight: "bold")[#body]
@@ -86,8 +94,8 @@
 
 // 02 — problem
 #head("壹", "現況分析", "THE SIGNALS ARE ALREADY IN THE CONVERSATION", 2)
-#place(left + top, dx: 0.58in, dy: 1.48in)[
-  #grid(columns: (1fr, 1fr, 1fr), gutter: 0.22in,
+#place(left + top, dx: margin-x, dy: content-y)[
+  #deck-grid(columns: (1fr, 1fr, 1fr), gutter: gap,
     ..(
       ("1", "低報風險", "防衛、污名或缺乏信任，讓真正的困擾不一定出現在量表上。"),
       ("2", "時間有限", "醫療人員同時要建立關係、理解主訴，也要辨識心理風險。"),
@@ -103,10 +111,10 @@
       #place(bottom + center, dy: -0.15in)[#box(width: 100%, fill: wine, radius: 6pt, inset: 10pt)[
         #align(center)[#text(fill: white, size: 13pt, weight: "bold")[需要更自然、可追溯的輔助方式]]
       ]]
-    ], fill: white))
+    ], fill: white, height: 4.95in))
   )
 ]
-#place(bottom + left, dx: 0.58in, dy: -0.62in)[
+#place(bottom + left, dx: margin-x, dy: -0.62in)[
   #text(size: 18pt, weight: "bold", fill: wine)[問題不是患者沒有說，而是重要訊號沒有被整理出來。]
 ]
 #footer(2)
@@ -114,15 +122,15 @@
 
 // 03 — demo
 #head("貳", "系統展示", "FROM NATURAL SPEECH TO REVIEWABLE EVIDENCE", 3)
-#place(left + top, dx: 0.58in, dy: 1.35in)[
-  #grid(columns: (4.15in, 0.55in, 7.0in), gutter: 0.18in,
+#place(left + top, dx: margin-x, dy: content-y)[
+  #deck-grid(columns: (4.0in, 0.5in, 1fr), gutter: gap,
     panel([
       #tag("診間自然對話")
       #v(0.25in)
       #text(size: 24pt, weight: "bold", fill: ink)[「最近晚上都睡不好，小孩稍微吵一下我就想罵人，覺得自己是個很糟糕的媽媽……」]
       #v(0.32in)
       #text(size: 12pt, fill: muted)[患者不必先理解量表，也不必離開原本的敘事脈絡。]
-    ], fill: white),
+    ], fill: white, height: 4.95in),
     align(center + horizon)[#text(size: 38pt, fill: wine)[→]],
     panel([
       #grid(columns: (1fr, 1fr, 1fr), gutter: 10pt,
@@ -145,10 +153,10 @@
       ]
       #v(0.18in)
       #tag("待醫療人員確認", fill: wine)
-    ], fill: white)
+    ], fill: white, height: 4.95in)
   )
 ]
-#place(bottom + left, dx: 0.58in, dy: -0.6in)[
+#place(bottom + left, dx: margin-x, dy: -0.6in)[
   #text(size: 17pt, weight: "bold", fill: wine)[不硬猜：證據不足就標示「資訊不足」，而不是補出一個分數。]
 ]
 #footer(3)
@@ -156,8 +164,8 @@
 
 // 04 — workflow and safety
 #head("參", "安全架構", "AI DRAFTS · CLINICIANS DECIDE", 4)
-#place(left + top, dx: 0.58in, dy: 1.35in)[
-  #grid(columns: (1fr, 1fr, 1fr, 1fr), gutter: 0.16in,
+#place(left + top, dx: margin-x, dy: content-y)[
+  #deck-grid(columns: (1fr, 1fr, 1fr, 1fr), gutter: gap,
     ..(("01", "即時轉錄", "診間語音轉為逐字稿；完成後銷毀原始音訊。"),
     ("02", "本機去識別", "資料離開設備前，先移除姓名、電話、地址。"),
     ("03", "結構化分析", "輸出分數草稿、原話、理由、信心與缺漏。"),
@@ -168,24 +176,24 @@
     #text(size: 18pt, weight: "bold")[#title]
     #v(0.14in)
     #text(size: 13.5pt, fill: muted)[#body]
-  ], fill: white)))
+  ], fill: white, height: 2.6in)))
 ]
-#place(left + top, dx: 0.58in, dy: 4.65in)[
-  #grid(columns: (1fr, 1fr), gutter: 0.2in,
+#place(left + top, dx: margin-x, dy: 4.18in)[
+  #deck-grid(columns: (1fr, 1fr), gutter: gap,
     panel([
       #text(size: 17pt, weight: "bold", fill: wine)[系統會做]
       #v(0.12in)
       #bullet[整理已出現的心理風險線索]
       #v(0.08in)
       #bullet[讓每個建議都能回到患者原話]
-    ], fill: blush),
+    ], fill: blush, height: 2.05in),
     panel([
       #text(size: 17pt, weight: "bold", fill: ink)[系統不會做]
       #v(0.12in)
       #bullet[自行診斷憂鬱症或判定自殺意圖]
       #v(0.08in)
       #bullet[用單一模型分數宣告安全或危險]
-    ], fill: sand)
+    ], fill: sand, height: 2.05in)
   )
 ]
 #footer(4)
@@ -193,8 +201,8 @@
 
 // 05 — business
 #head("肆", "商業模式", "WHO PAYS · WHAT THEY GET · HOW WE SCALE", 5)
-#place(left + top, dx: 0.58in, dy: 1.38in)[
-  #grid(columns: (1fr, 1fr, 1fr), gutter: 0.18in,
+#place(left + top, dx: margin-x, dy: content-y)[
+  #deck-grid(columns: (1fr, 1fr, 1fr), gutter: gap,
     panel([
       #tag("目標客群")
       #v(0.2in)
@@ -205,7 +213,7 @@
       #bullet[心理諮商與家醫科]
       #v(0.1in)
       #bullet[學校輔導中心]
-    ], fill: white),
+    ], fill: white, height: 4.8in),
     panel([
       #tag("價值主張")
       #v(0.2in)
@@ -216,7 +224,7 @@
       #bullet[提醒容易忽略的線索]
       #v(0.1in)
       #bullet[原話可追溯、便於複核]
-    ], fill: white),
+    ], fill: white, height: 4.8in),
     panel([
       #tag("收益模式")
       #v(0.2in)
@@ -227,11 +235,11 @@
       #bullet[HIS、EMR API 模組授權]
       #v(0.1in)
       #bullet[大型院所私有部署]
-    ], fill: white)
+    ], fill: white, height: 4.8in)
   )
 ]
-#place(bottom + left, dx: 0.58in, dy: -0.66in)[
-  #box(width: 12.18in, fill: blush, radius: 5pt, inset: 14pt)[
+#place(bottom + left, dx: margin-x, dy: -0.66in)[
+  #box(width: content-w, fill: blush, radius: 5pt, inset: 14pt)[
     #text(size: 16pt, weight: "bold", fill: wine)[進入策略：] #text(size: 15pt)[以封閉式試辦驗證臨床工作流，再透過醫療資訊系統合作擴大導入。]
   ]
 ]
@@ -240,9 +248,9 @@
 
 // 06 — roadmap
 #head("伍", "成效與規劃", "FROM CONCEPT DEMO TO CLINICAL PILOT", 6)
-#place(left + top, dx: 0.58in, dy: 1.35in)[
-  #grid(columns: (1fr, 1fr, 1fr, 1fr), gutter: 0.13in,
-    ..(("實作", "概念驗證", ("固定模擬逐字稿", "輸出 schema 與評分提示", "量表與證據介面")),
+#place(left + top, dx: margin-x, dy: content-y)[
+  #deck-grid(columns: (1fr, 1fr, 1fr, 1fr), gutter: gap,
+    ..(("實作", "概念驗證", ("固定模擬逐字稿", "定義輸出 schema", "完成量表與證據介面")),
     ("短期", "離線驗證", ("建立標註測試集", "測試漏報、誤報與語境", "完成 PII 與刪除流程")),
     ("中期", "封閉式試辦", ("臨床／法規／資安審查", "取得倫理審查核准", "觀察可用性與工作流")),
     ("長期", "系統整合", ("串接 HIS／EMR", "權限、稽核與版本紀錄", "依證據調整產品宣稱")))
@@ -255,9 +263,9 @@
       #bullet[#item]
       #v(0.14in)
     ]
-  ], fill: white)))
+  ], fill: white, height: 4.85in)))
 ]
-#place(bottom + left, dx: 0.58in, dy: -0.64in)[
+#place(bottom + left, dx: margin-x, dy: -0.64in)[
   #text(size: 17pt, weight: "bold", fill: wine)[成功不是 AI 打了幾分，而是醫療人員能否更快找到值得追問的證據。]
 ]
 #footer(6)
