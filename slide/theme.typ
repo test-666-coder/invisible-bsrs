@@ -14,36 +14,18 @@
 #let content-y = 1.35in
 #let gap = 0.18in
 
-#let footer(n) = place(
-  bottom + left,
-  dx: 0.46in,
-  dy: -0.24in,
-  text(size: 8pt, fill: muted)[Invisible BSRS｜Build with AI Hackathon],
-) + place(
-  bottom + right,
-  dx: -0.46in,
-  dy: -0.24in,
-  text(size: 9pt, fill: muted)[#n],
+#let footer(n) = place(""
 )
 
-#let brand() = place(top + right, dx: -0.46in, dy: 0.31in)[
-  #align(right)[
-    #text(size: 9pt, weight: "bold", fill: wine)[INVISIBLE]
-    #linebreak()
-    #text(size: 6.5pt, tracking: 1.6pt, fill: wine)[BSRS]
-  ]
-]
+#let brand() = place("")
 
 #let head(no, title, en, n) = {
   place(top + left, dx: 0.46in, dy: 0.42in)[
-    #grid(columns: (0.28in, auto), column-gutter: 0.12in,
-      line(length: 0.28in, stroke: 1.2pt + ink),
-      block[
-        #text(size: 25pt, weight: "bold", fill: ink)[#no、#title]
-        #linebreak()
-        #text(size: 7.2pt, weight: "bold", tracking: 1.4pt, fill: muted)[#en]
-      ]
-    )
+    #block[
+      #text(size: 25pt, weight: "bold", fill: ink)[#no、#title]
+      #linebreak()
+      #text(size: 7.2pt, weight: "bold", tracking: 1.4pt, fill: muted)[#en]
+    ]
   ]
   brand()
 }

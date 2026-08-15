@@ -6,11 +6,11 @@
   #box(width: content-w, fill: blush, radius: 6pt, inset: (x: 18pt, y: 13pt))[
     #text(size: 23pt, weight: "bold", fill: wine)[隱形溫度計：把診間對話轉成可追溯的臨床輔助 Dashboard]
     #v(0.06in)
-    #text(size: 13.5pt, fill: muted)[不要求患者多填一張表，也不讓 AI 下判斷；只整理對話中值得醫師或諮商師注意的訊號。]
+    #text(size: 13.5pt, fill: muted)[從語音、隱私處理到結構化輸出，將自然對話整理成供專業人員覆核的評估草稿。]
   ]
 ]
 
-#place(left + top, dx: margin-x, dy: 2.35in)[
+#place(left + top, dx: margin-x, dy: 2.72in)[
   #let step-card(no, title, body, foot, fill: white) = panel([
     #grid(
       rows: (0.38in, 0.72in, 1.35in, 0.48in),
@@ -28,38 +28,41 @@
 
   #deck-grid(columns: (1fr, 0.24in, 1fr, 0.24in, 1fr, 0.24in, 1fr), gutter: 0.07in,
     step-card(
-      "01", [診間／諮商對話],
-      text(size: 12.5pt, fill: muted)[取得同意後，在原本的醫病或諮商互動中收集語音。],
-      [不改變原有談話流程],
+      "01", [語音與逐字稿],
+      [#text(size: 12.5pt)[本地 Whisper 轉錄] #v(0.1in)
+       #text(size: 12.5pt)[同步取得語音情緒]],
+      [輸入來自自然醫病對話],
     ),
 
     align(center + horizon)[#text(size: 27pt, fill: wine)[→]],
 
     step-card(
-      "02", [AI 訊號分析],
-      [#text(size: 12.5pt)[語速與停頓] #v(0.1in)
-       #text(size: 12.5pt)[音量與變化] #v(0.1in)
-       #text(size: 12.5pt)[談話內容與語境]],
-      [整合多模態對話訊號], fill: blush,
+      "02", [本機隱私處理],
+      [#text(size: 12.5pt)[CKIP NER 辨識個資] #v(0.1in)
+       #text(size: 12.5pt)[Regex 補強遮蔽] #v(0.1in)
+       #text(size: 12.5pt)[只送出去識別文字]],
+      [原始音訊不進入 LLM], fill: blush,
     ),
 
     align(center + horizon)[#text(size: 27pt, fill: wine)[→]],
 
     step-card(
-      "03", [臨床輔助 Dashboard],
-      [#text(size: 12.2pt)[情緒與身心線索] #v(0.07in)
-       #text(size: 12.2pt)[患者原話證據] #v(0.07in)
-       #text(size: 12.2pt)[資訊缺漏與信心] #v(0.07in)
-       #text(size: 12.2pt)[建議追問方向]],
-      [每項線索皆可回看原文],
+      "03", [結構化 AI 分析],
+      [#text(size: 12.2pt)[BSRS-5 五項線索] #v(0.07in)
+       #text(size: 12.2pt)[自殺想法獨立處理] #v(0.07in)
+       #text(size: 12.2pt)[證據、信心與缺漏] #v(0.07in)
+       #text(size: 12.2pt)[固定 Schema 驗證]],
+      [資訊不足就要求直接確認],
     ),
 
     align(center + horizon)[#text(size: 27pt, fill: wine)[→]],
 
     step-card(
-      "04", [專業人員使用],
-      text(size: 12.5pt, fill: muted)[查看訊號與原文，決定是否追問及如何進一步評估。],
-      [最終判斷由專業人員完成], fill: sand,
+      "04", [Dashboard 覆核],
+      [#text(size: 12.5pt)[查看分項與原話] #v(0.1in)
+       #text(size: 12.5pt)[確認、修改或追問] #v(0.1in)
+       #text(size: 12.5pt)[匯出結構化 JSON]],
+      [正式判斷由專業人員完成], fill: sand,
     )
   )
 ]
