@@ -1,6 +1,7 @@
 #import "theme.typ": *
 
-#place(center + horizon)[
-  #text(size: 54pt, weight: "bold", fill: ink)[肆、Demo]
+#head("伍", "DEMO", "", 4)
+#place(left + top, dx: 0.75in, dy: 1.45in)[
+  #image("assets/IMG_1151.JPG", width: 90%)
 ]
 #pagebreak()
