@@ -14,8 +14,7 @@
 #let content-y = 1.35in
 #let gap = 0.18in
 
-#let footer(n) = place(""
-)
+#let footer(n) = place("")
 
 #let brand() = place("")
 

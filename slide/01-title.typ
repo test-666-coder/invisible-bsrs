@@ -4,19 +4,17 @@
   #text(size: 11pt, tracking: 2pt, fill: wine, weight: "bold")[BUILD WITH AI HACKATHON]
 ]
 #place(left + horizon, dx: 0.72in, dy: -0.42in)[
-  #text(size: 48pt, weight: "bold", fill: wine)[隱形溫度計]
+  #text(size: 48pt, weight: "bold", fill: wine)[你的心有一道牆～～\
+  但我發現一扇窗～～～
+  ]
   #linebreak()
   #text(size: 17pt, tracking: 3pt, fill: wine)[INVISIBLE BSRS]
   #v(0.34in)
-  #text(size: 24pt, weight: "bold", fill: ink)[用傾聽取代填表，讓求救訊號被看見]
+  #text(size: 24pt, weight: "bold", fill: ink)[讓求救訊號被看見]
 ]
-#place(right + horizon, dx: -0.72in, dy: -0.12in)[
-  #box(width: 4.0in, height: 3.5in, fill: wine, radius: 50%)[
-    #align(center + horizon)[
-      #text(size: 64pt, weight: "bold", fill: white)[BSRS-5]
-      #linebreak()
-      #text(size: 12pt, tracking: 2pt, fill: white)[SIGNALS · ONE CONVERSATION]
-    ]
+#place(right + horizon, dx: -0.62in, dy: -0.08in)[
+  #block(width: 4.65in, height: 4.35in, radius: 18pt, clip: true)[
+    #image("assets/title-product-visual.png", width: 100%, height: 100%, fit: "cover")
   ]
 ]
 #place(bottom + left, dx: 0.72in, dy: -0.52in)[
