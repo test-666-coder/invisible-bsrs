@@ -45,7 +45,7 @@
 ]
 
 #place(bottom + left, dx: margin-x, dy: -0.24in)[
-  #text(size: 8.5pt, fill: muted)[薪資參考：104 薪資情報；其他項目依 MVP 開發、臨床與合規需求估算。]
+  #text(size: 8.5pt, fill: muted)[薪資參考：104 薪資情報；其他項目依首年產品開發、臨床與合規需求估算。]
 ]
 #footer("A1")
 #pagebreak()

@@ -12,7 +12,7 @@
     <circle cx="260" cy="255" r="150" stroke="#C89A35" stroke-dasharray="94.248 848.230" stroke-dashoffset="-801.106"/>
     <circle cx="260" cy="255" r="150" stroke="#756965" stroke-dasharray="47.124 895.354" stroke-dashoffset="-895.354"/>
   </g>
-  <text x="260" y="222" fill="#756965" text-anchor="middle" class="small">年度成本</text>
+  <text x="260" y="222" fill="#756965" text-anchor="middle" class="small">首年成本</text>
   <text x="260" y="278" fill="#8E1F1F" text-anchor="middle" class="big">323–380</text>
   <text x="260" y="316" fill="#251D1B" text-anchor="middle" class="label">萬元</text>
 </svg>

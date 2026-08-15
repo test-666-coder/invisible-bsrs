@@ -1,28 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="560" viewBox="0 0 720 560">
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="520" viewBox="0 0 620 520">
   <style>
     text { font-family: "Noto Sans CJK TC", "PingFang TC", sans-serif; }
-    .eyebrow { font-size: 18px; font-weight: 700; letter-spacing: 2px; }
-    .number { font-size: 42px; font-weight: 800; }
-    .body { font-size: 16px; font-weight: 500; }
+    .eyebrow { font-size: 17px; font-weight: 700; letter-spacing: 2px; }
+    .number { font-size: 40px; font-weight: 800; }
+    .body { font-size: 15px; font-weight: 500; }
   </style>
-  <circle cx="300" cy="280" r="265" fill="#E8DED1"/>
-  <circle cx="300" cy="280" r="188" fill="#EBCFC8"/>
-  <circle cx="300" cy="280" r="104" fill="#991F21"/>
 
-  <text x="92" y="92" fill="#756965" class="eyebrow">TAM</text>
-  <text x="92" y="137" fill="#251D1B" class="number">14,000+</text>
-  <text x="92" y="166" fill="#756965" class="body">醫療與校園照護場域</text>
+  <circle cx="300" cy="260" r="245" fill="#E8DED1"/>
+  <circle cx="300" cy="260" r="174" fill="#EBCFC8"/>
+  <circle cx="300" cy="260" r="96" fill="#991F21"/>
 
-  <text x="405" y="185" fill="#8E1F1F" class="eyebrow">SAM</text>
-  <text x="405" y="227" fill="#8E1F1F" class="number">13,347</text>
-  <text x="405" y="255" fill="#756965" class="body">醫療院所與心理機構</text>
+  <text x="82" y="91" fill="#756965" class="eyebrow">TAM</text>
+  <text x="82" y="133" fill="#251D1B" class="number">14,000+</text>
+  <text x="82" y="160" fill="#756965" class="body">醫療與校園照護場域</text>
 
-  <text x="300" y="254" fill="#FFFFFF" text-anchor="middle" class="eyebrow">SOM</text>
-  <text x="300" y="306" fill="#FFFFFF" text-anchor="middle" class="number">840</text>
-  <text x="300" y="338" fill="#FFFFFF" text-anchor="middle" class="body">心理專科場域</text>
+  <text x="418" y="166" fill="#8E1F1F" class="eyebrow">SAM</text>
+  <text x="418" y="207" fill="#8E1F1F" class="number">13,347</text>
+  <text x="418" y="234" fill="#756965" class="body">醫療院所與心理機構</text>
 
-  <path d="M545 413 C610 413 620 448 650 448" fill="none" stroke="#C89A35" stroke-width="3"/>
-  <circle cx="650" cy="448" r="5" fill="#C89A35"/>
-  <text x="580" y="485" fill="#8E1F1F" text-anchor="middle" class="eyebrow">擴張順序</text>
-  <text x="580" y="514" fill="#756965" text-anchor="middle" class="body">心理專科 → 基層醫療 → 校園</text>
+  <text x="300" y="240" fill="#FFFFFF" text-anchor="middle" class="eyebrow">SOM</text>
+  <text x="300" y="292" fill="#FFFFFF" text-anchor="middle" class="number">840</text>
+  <text x="300" y="321" fill="#FFFFFF" text-anchor="middle" class="body">心理專科場域</text>
 </svg>
