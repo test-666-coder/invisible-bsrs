@@ -13,6 +13,7 @@ def main(argv: list[str] | None = None) -> int:
 
     config = load_config()
     os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS", "1")
+    os.environ.setdefault("HF_HUB_DISABLE_XET", "1")
     model_ids = [config.asr_model_id, config.ner_model_id, config.emotion_model_id]
     model_ids.extend(args.model or [])
 

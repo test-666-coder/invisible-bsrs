@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -84,24 +85,42 @@ def transcribe_audio(audio_path: str | Path, config: PipelineConfig) -> dict:
         "automatic-speech-recognition",
         config.asr_model_id,
         config,
-        chunk_length_s=30,
-        stride_length_s=5,
+        chunk_length_s=config.asr_chunk_length_s,
+        stride_length_s=config.asr_stride_length_s,
     )
     path = str(audio_path)
+    generate_kwargs = {
+        "task": "transcribe",
+        "num_beams": max(1, int(config.asr_num_beams)),
+    }
+    if config.asr_language:
+        generate_kwargs["language"] = config.asr_language
     try:
         result = pipe(
             path,
             return_timestamps=True,
-            generate_kwargs={"language": config.asr_language, "task": "transcribe"},
+            generate_kwargs=generate_kwargs,
         )
     except TypeError:
-        result = pipe(path, return_timestamps=True)
+        fallback_kwargs = {"task": "transcribe"}
+        if config.asr_language:
+            fallback_kwargs["language"] = config.asr_language
+        try:
+            result = pipe(path, return_timestamps=True, generate_kwargs=fallback_kwargs)
+        except TypeError:
+            result = pipe(path, return_timestamps=True)
 
     text = result.get("text", "") if isinstance(result, dict) else str(result)
     return {
         "text": text.strip(),
         "segments": result.get("chunks", []) if isinstance(result, dict) else [],
         "model_id": config.asr_model_id,
+        "decode_settings": {
+            "language": config.asr_language,
+            "num_beams": config.asr_num_beams,
+            "chunk_length_s": config.asr_chunk_length_s,
+            "stride_length_s": config.asr_stride_length_s,
+        },
     }
 
 
@@ -138,6 +157,12 @@ def deidentify_with_local_ner(text: str, config: PipelineConfig) -> Deidentifica
 
 
 def _pipeline(task: str, model_id: str, config: PipelineConfig, **kwargs):
+    device = _resolve_device(config.hf_device)
+    return _cached_pipeline(task, model_id, device, tuple(sorted(kwargs.items())))
+
+
+@lru_cache(maxsize=8)
+def _cached_pipeline(task: str, model_id: str, device: int, kwargs_items: tuple):
     try:
         import torch
         from transformers import pipeline
@@ -146,12 +171,11 @@ def _pipeline(task: str, model_id: str, config: PipelineConfig, **kwargs):
             "Missing local model dependencies. Install requirements.txt before running the model pipeline."
         ) from exc
 
-    device = _resolve_device(config.hf_device)
     pipe_kwargs = {
         "task": task,
         "model": model_id,
         "device": device,
-        **kwargs,
+        **dict(kwargs_items),
     }
     if device != -1 and task == "automatic-speech-recognition":
         pipe_kwargs["dtype"] = torch.float16

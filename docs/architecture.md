@@ -16,7 +16,7 @@ flowchart LR
 
 | 模組 | 預設模型 | 說明 |
 | --- | --- | --- |
-| 語音轉逐字稿 | `openai/whisper-small` | 本地 ASR，可改 `openai/whisper-tiny` 降低硬體需求，或改 `openai/whisper-large-v3` 提高品質。 |
+| 語音轉逐字稿 | `openai/whisper-tiny` | 本地 ASR，Demo 啟動較快；可改 `openai/whisper-small` 或更大的 Whisper 模型提高品質。 |
 | 逐字稿去識別化 | `ckiplab/albert-tiny-chinese-ner` | 繁中 NER 小模型，搭配 regex 遮蔽電話、身分證、地址、日期、email 等。 |
 | 語音轉心情 | `Dpngtm/wav2vec2-emotion-recognition` | 本地語音情緒分類，輸出 dominant emotion、arousal、valence。 |
 | 逐字稿與心情轉量表 | `OPENAI_BSRS_MODEL` | 只送去識別化逐字稿與語音情緒摘要，使用 JSON schema 輸出 `schema_version=1.1.0` 報告。 |

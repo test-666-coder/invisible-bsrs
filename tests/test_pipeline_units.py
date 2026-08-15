@@ -53,6 +53,16 @@ class PipelineUnitTests(unittest.TestCase):
         self.assertIn("患者常會淡化", text)
         self.assertNotIn("王小明", text)
 
+    def test_prompt_keeps_manageable_stress_low_and_scores_direct_safety_denial(self):
+        messages = build_bsrs_prompt("患者偶爾急一下但能察覺並修正。醫師問有沒有不想活，患者說完全沒有。", None)
+        text = json.dumps(messages, ensure_ascii=False)
+        self.assertIn("繁體中文", text)
+        self.assertIn("低嚴重度與保護因子", text)
+        self.assertIn("0 或 1", text)
+        self.assertIn("偶爾急一下但能察覺並修正", text)
+        self.assertIn("estimated_score 應為 0", text)
+        self.assertIn("requires_direct_confirmation=false", text)
+
     def test_transcript_correction_prompt_preserves_deidentified_placeholders(self):
         messages = build_transcript_correction_prompt("[NAME] 手機是[MOBILE]，最近睡不好。")
         text = json.dumps(messages, ensure_ascii=False)
@@ -62,11 +72,15 @@ class PipelineUnitTests(unittest.TestCase):
         self.assertNotIn("王小明", text)
 
     def test_transcript_correction_prompt_mentions_taiwan_mandarin(self):
-        messages = build_transcript_correction_prompt("一時問：最近食育怎麼樣？換者說胸口僅僅。")
+        messages = build_transcript_correction_prompt("伊斯問：最近南睡嗎？換著說胸口僅僅，待伴很多。")
         text = json.dumps(messages, ensure_ascii=False)
         self.assertIn("台灣華語", text)
+        self.assertIn("醫師", text)
+        self.assertIn("患者", text)
         self.assertIn("食慾", text)
         self.assertIn("胸口緊緊", text)
+        self.assertIn("難睡", text)
+        self.assertIn("待辦", text)
 
     def test_voice_emotion_summary_adds_finer_profile(self):
         profile = summarize_emotion_scores(
@@ -104,6 +118,55 @@ class PipelineUnitTests(unittest.TestCase):
         self.assertEqual(normalized["assessment"]["core_items"][0]["value"]["score_label"], "厲害")
         self.assertFalse(normalized["assessment"]["supplemental_item"]["scale_mapping"]["included_in_core_total"])
         self.assertIsNone(normalized["assessment"]["supplemental_item"]["value"]["derived_presence"])
+
+    def test_normalize_report_marks_direct_safety_denial_as_estimated(self):
+        report = _minimal_report()
+        supplemental = report["assessment"]["supplemental_item"]
+        supplemental["value"]["estimated_score"] = 0
+        supplemental["value"]["evidence_sufficiency"] = "sufficient"
+        supplemental["evidence"] = [
+            {
+                "evidence_id": "ev-safety",
+                "transcript_segment_id": "seg-safety",
+                "speaker": "patient",
+                "quote": "沒有，這個完全沒有。",
+            }
+        ]
+
+        normalized = normalize_bsrs_report(
+            report,
+            session_id="demo-001",
+            language="zh-TW",
+            model="gpt-test",
+            generated_at="2026-08-15T00:00:00+00:00",
+        )
+
+        value = normalized["assessment"]["supplemental_item"]["value"]
+        self.assertEqual(value["estimated_score"], 0)
+        self.assertEqual(value["score_label"], "完全沒有")
+        self.assertFalse(value["derived_presence"])
+        self.assertEqual(value["assessment_status"], "estimated")
+        self.assertFalse(normalized["assessment"]["supplemental_item"]["requires_direct_confirmation"])
+        self.assertEqual(normalized["assessment"]["summary"]["distress_level"], "moderate_distress")
+        self.assertEqual(normalized["assessment"]["summary"]["safety_status"], "no_alert")
+
+    def test_normalize_report_recovers_direct_safety_denial_from_transcript(self):
+        report = _minimal_report()
+
+        normalized = normalize_bsrs_report(
+            report,
+            session_id="demo-001",
+            language="zh-TW",
+            model="gpt-test",
+            generated_at="2026-08-15T00:00:00+00:00",
+            deidentified_transcript="醫師問最近有沒有不想活或想傷害自己。患者回答沒有，這個完全沒有。",
+        )
+
+        supplemental = normalized["assessment"]["supplemental_item"]
+        self.assertEqual(supplemental["value"]["estimated_score"], 0)
+        self.assertEqual(supplemental["value"]["assessment_status"], "estimated")
+        self.assertFalse(supplemental["requires_direct_confirmation"])
+        self.assertTrue(supplemental["evidence"])
 
 
 def _core_item(score):

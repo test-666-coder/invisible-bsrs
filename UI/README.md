@@ -1,100 +1,39 @@
-# vinext-starter
+# 澄心 UI
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+這個資料夾是新版 BSRS-5 量表畫面。它可以載入既有 JSON，也可以把音檔送到本機 Python 模型服務，完成「聲音 -> 逐字稿 -> 去識別化 -> 語音情緒 -> BSRS JSON -> UI」流程。
 
-## Prerequisites
+## 啟動方式
 
-- Node.js `>=22.13.0`
+請先確認已安裝 Node.js 22.13 以上，並在專案根目錄完成 Python 環境與 `.env` 設定。
 
-## Quick Start
+先在專案根目錄啟動模型服務：
 
-```bash
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn patient_mood_pipeline.web_api:app --host 127.0.0.1 --port 8765
+```
+
+再啟動 UI：
+
+```powershell
+cd UI
 npm install
 npm run dev
-npm run build
 ```
 
-This starter does not use `wrangler.jsonc`.
+開啟 UI 後按「上傳音檔」。音檔選好後會自動分析，完成時畫面會直接更新量表結果。
 
-## Included Shape
+## 輸出檔案
 
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+模型服務會把每次分析的檔案保留在專案根目錄：
 
-## Workspace Auth Headers
+- `outputs/ui_uploads/`：上傳音檔
+- `outputs/ui_runs/*_asr_transcript.txt`：語音轉文字
+- `outputs/ui_runs/*_deidentified_transcript.txt`：去識別化逐字稿
+- `outputs/ui_runs/*_voice_emotion.json`：語音情緒
+- `outputs/ui_runs/*_bsrs.json`：量表 JSON
 
-Signed-in visitors receive both `oai-authenticated-user-id` and `oai-authenticated-user-email`. Private Sites require every visitor to sign in; public Sites may also have anonymous visitors, for whom neither header is present.
+前端預設呼叫 `http://127.0.0.1:8765`。如果需要改位置，可在啟動 UI 前設定：
 
-The user ID is stable for the same user on the same Site and different across Sites. Email and name are intended for display or contact purposes.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const userId = requestHeaders.get("oai-authenticated-user-id");
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
+```powershell
+$env:NEXT_PUBLIC_PIPELINE_API_URL="http://127.0.0.1:8765"
 ```
-
-## Optional Dispatch-Owned ChatGPT Sign-In
-
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
-
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
-
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
-
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
-
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
-
-## Useful Commands
-
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
-
-## Learn More
-
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)

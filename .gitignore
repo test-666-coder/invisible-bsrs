@@ -3,9 +3,16 @@ __pycache__/
 *.py[cod]
 .venv/
 .env
+UI/.env
+UI/.env.local
 outputs/
 .screenshots/
 .preview/
 models/
 research/
 samples/*.wav
+UI/node_modules/
+UI/.next/
+UI/dist/
+UI/.wrangler/
+UI/.vinext/

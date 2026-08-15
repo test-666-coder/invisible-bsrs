@@ -212,9 +212,11 @@ flowchart TD
 - 前端 demo：可貼上逐字稿，快速展示去識別化、情緒線索與 BSRS-5 結果。
 - 模型管線：本地 Hugging Face 模型處理語音與個資，最後用 OpenAI API 產生結構化 BSRS JSON。
 
+若你是第一次執行，請先看完整使用教學：[docs/usage.md](docs/usage.md)。
+
 ### 目前實作
 
-- 語音轉逐字稿：預設 `openai/whisper-small` 本地 ASR。
+- 語音轉逐字稿：預設 `openai/whisper-tiny` 本地 ASR，可改 `openai/whisper-small` 提高辨識品質。
 - 語音轉心情：預設 `Dpngtm/wav2vec2-emotion-recognition` 本地語音情緒分類。
 - 逐字稿去識別化：預設 `ckiplab/albert-tiny-chinese-ner` 加上 regex 遮蔽個資。
 - 逐字稿與心情轉量表：使用 OpenAI API Structured Outputs 產生 `schema_version=1.1.0` 的 BSRS JSON。
@@ -227,6 +229,31 @@ python -m http.server 5173 --bind 127.0.0.1
 
 然後開啟 `http://127.0.0.1:5173/`。
 
+### 執行新版聲音到 UI 流程
+
+新版 `UI/` 會直接上傳音檔到本機模型服務，模型服務跑完整管線後回傳正式 BSRS JSON，畫面會自動更新量表。
+
+第一個終端機啟動本機模型服務：
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn patient_mood_pipeline.web_api:app --host 127.0.0.1 --port 8765
+```
+
+第二個終端機啟動新版 UI：
+
+```powershell
+cd UI
+npm run dev
+```
+
+開啟 UI 後按「上傳音檔」。音檔選好後會自動分析，完成時畫面會直接更新量表結果。每次分析會保留音檔與中間結果：
+
+- `outputs/ui_uploads/`：上傳音檔
+- `outputs/ui_runs/*_asr_transcript.txt`：語音轉文字
+- `outputs/ui_runs/*_deidentified_transcript.txt`：去識別化逐字稿
+- `outputs/ui_runs/*_voice_emotion.json`：語音情緒
+- `outputs/ui_runs/*_bsrs.json`：量表 JSON
+
 ### 執行完整模型管線
 
 ```powershell
@@ -237,6 +264,8 @@ copy .env.example .env
 python -m patient_mood_pipeline.download_models
 python -m patient_mood_pipeline.run --audio .\samples\conversation.wav --session-id demo-001 --output .\outputs\result.json
 ```
+
+若語音轉文字錯誤率偏高，可把 `.env` 裡的 `ASR_MODEL_ID` 從 `openai/whisper-tiny` 改成 `openai/whisper-small`，並保留 `ASR_NUM_BEAMS=5`。顯卡記憶體足夠時可再改用更大的 Whisper 模型。
 
 詳細架構請看 `docs/architecture.md`。
 

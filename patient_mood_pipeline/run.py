@@ -13,17 +13,53 @@ from .openai_transcript import correct_deidentified_transcript
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    try:
+        result = run_pipeline(
+            audio=args.audio,
+            transcript_file=args.transcript_file,
+            output=args.output,
+            openai_model=args.openai_model,
+            session_id=args.session_id,
+            language=args.language,
+            transcript_correction_model=args.transcript_correction_model,
+            skip_transcript_correction=args.skip_transcript_correction,
+            intermediate_prefix=args.intermediate_prefix,
+            local_only=args.local_only,
+            debug_envelope=args.debug_envelope,
+            include_raw=args.include_raw,
+        )
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(f"Wrote {result['output_path']}")
+    return 0
+
+
+def run_pipeline(
+    *,
+    audio: str | Path | None = None,
+    transcript_file: str | Path | None = None,
+    output: str | Path | None = None,
+    openai_model: str | None = None,
+    session_id: str = "demo-001",
+    language: str = "zh-TW",
+    transcript_correction_model: str | None = None,
+    skip_transcript_correction: bool = False,
+    intermediate_prefix: str | Path | None = None,
+    local_only: bool = False,
+    debug_envelope: bool = False,
+    include_raw: bool = False,
+) -> dict:
     config = load_config()
 
-    if not args.audio and not args.transcript_file:
-        raise SystemExit("請提供 --audio 或 --transcript-file。")
+    if not audio and not transcript_file:
+        raise ValueError("請提供 --audio 或 --transcript-file。")
 
-    audio_path = Path(args.audio).expanduser().resolve() if args.audio else None
-    transcript_source = "transcript_file" if args.transcript_file else "local_asr"
+    audio_path = Path(audio).expanduser().resolve() if audio else None
+    transcript_source = "transcript_file" if transcript_file else "local_asr"
 
     asr_result = None
-    if args.transcript_file:
-        transcript = Path(args.transcript_file).read_text(encoding="utf-8").strip()
+    if transcript_file:
+        transcript = Path(transcript_file).expanduser().resolve().read_text(encoding="utf-8").strip()
     else:
         asr_result = transcribe_audio(audio_path, config)
         transcript = asr_result["text"]
@@ -31,12 +67,12 @@ def main(argv: list[str] | None = None) -> int:
     pre_correction_deid_result = deidentify_with_local_ner(transcript, config)
     transcript_correction = None
     corrected_transcript = pre_correction_deid_result.text
-    correction_enabled = not args.local_only and not args.skip_transcript_correction
+    correction_enabled = not local_only and not skip_transcript_correction
     if correction_enabled:
         transcript_correction = correct_deidentified_transcript(
             deidentified_transcript=pre_correction_deid_result.text,
-            model=args.transcript_correction_model or config.transcript_correction_model,
-            language=args.language,
+            model=transcript_correction_model or config.transcript_correction_model,
+            language=language,
         )
         corrected_transcript = transcript_correction["corrected_transcript"].strip()
 
@@ -44,13 +80,13 @@ def main(argv: list[str] | None = None) -> int:
     voice_emotion = analyze_voice_emotion(audio_path, config) if audio_path else None
 
     bsrs_report = None
-    if not args.local_only:
+    if not local_only:
         bsrs_report = infer_bsrs_json(
             deidentified_transcript=deid_result.text,
             voice_emotion=voice_emotion,
-            model=args.openai_model or config.openai_model,
-            session_id=args.session_id,
-            language=args.language,
+            model=openai_model or config.openai_model,
+            session_id=session_id,
+            language=language,
         )
 
     debug_output = {
@@ -66,17 +102,17 @@ def main(argv: list[str] | None = None) -> int:
         "voice_emotion": voice_emotion,
         "bsrs_report": bsrs_report,
     }
-    if args.include_raw:
+    if include_raw:
         debug_output["raw_transcript"] = transcript
 
-    output = debug_output if args.local_only or args.debug_envelope else bsrs_report
+    output_data = debug_output if local_only or debug_envelope else bsrs_report
 
-    output_path = Path(args.output or default_output_path()).expanduser().resolve()
+    output_path = Path(output or default_output_path()).expanduser().resolve()
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
-    if args.intermediate_prefix:
+    output_path.write_text(json.dumps(output_data, ensure_ascii=False, indent=2), encoding="utf-8")
+    if intermediate_prefix:
         _write_intermediate_files(
-            args.intermediate_prefix,
+            str(intermediate_prefix),
             transcript=transcript,
             asr_result=asr_result,
             pre_correction_deid=pre_correction_deid_result,
@@ -86,8 +122,13 @@ def main(argv: list[str] | None = None) -> int:
             debug_output=debug_output,
             bsrs_report=bsrs_report,
         )
-    print(f"Wrote {output_path}")
-    return 0
+
+    return {
+        "output": output_data,
+        "output_path": output_path,
+        "debug_output": debug_output,
+        "bsrs_report": bsrs_report,
+    }
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
