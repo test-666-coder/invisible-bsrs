@@ -43,10 +43,12 @@
 
 #place(left + top, dx: margin-x, dy: 5.95in)[
   #block(width: content-w, height: 0.72in, fill: white, radius: 5pt, inset: 11pt)[
-    #grid(columns: (auto, 1fr, auto, 1fr, auto, 1fr), column-gutter: 10pt,
-      [#text(size: 11pt, weight: "bold", fill: wine)[MVP]], [#text(size: 10.5pt)[完成產品與安全管線]],
-      [#text(size: 18pt, fill: sand)[→]], [#text(size: 10.5pt)[封閉試辦與臨床檢驗]],
-      [#text(size: 18pt, fill: sand)[→]], [#text(size: 10.5pt)[依整合量增加人力預算]],
+    #grid(columns: (1fr, auto, 1fr, auto, 1fr), column-gutter: 10pt,
+      [#align(center)[#text(size: 10.5pt, weight: "bold", fill: wine)[MVP] #h(6pt) #text(size: 10.5pt)[完成產品與安全管線]]],
+      [#text(size: 18pt, fill: sand)[→]],
+      [#align(center)[#text(size: 10.5pt)[封閉試辦與臨床檢驗]]],
+      [#text(size: 18pt, fill: sand)[→]],
+      [#align(center)[#text(size: 10.5pt)[依整合量增加人力預算]]],
     )
   ]
 ]

@@ -11,12 +11,12 @@
 ]
 
 // One continuous route replaces the previous pair of dense cards.
-#place(left + top, dx: 1.14in, dy: 2.38in)[
-  #line(length: 10.75in, stroke: 2pt + sand)
+#place(left + top, dx: 2.37in, dy: 2.38in)[
+  #line(length: 8.18in, stroke: 2pt + sand)
 ]
-#place(left + top, dx: 1.05in, dy: 2.27in)[#circle(radius: 9pt, fill: cream, stroke: 2pt + wine)]
-#place(left + top, dx: 6.57in, dy: 2.21in)[#circle(radius: 13pt, fill: wine, stroke: 3pt + blush)]
-#place(left + top, dx: 11.80in, dy: 2.27in)[#circle(radius: 9pt, fill: cream, stroke: 2pt + wine)]
+#place(left + top, dx: 2.245in, dy: 2.27in)[#circle(radius: 9pt, fill: cream, stroke: 2pt + wine)]
+#place(left + top, dx: 6.279in, dy: 2.21in)[#circle(radius: 13pt, fill: wine, stroke: 3pt + blush)]
+#place(left + top, dx: 10.425in, dy: 2.27in)[#circle(radius: 9pt, fill: cream, stroke: 2pt + wine)]
 
 #place(left + top, dx: 0.72in, dy: 2.72in)[
   #grid(columns: (3.30in, 3.94in, 3.30in), column-gutter: 0.47in,
