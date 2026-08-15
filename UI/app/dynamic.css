@@ -98,7 +98,7 @@ button:focus-visible,
   border-radius: 3px;
   background: transparent;
   color: var(--teal-dark);
-  font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  font-family: var(--font-serif);
   font-size: 21px;
   transform: rotate(-1.5deg);
 }
@@ -117,7 +117,7 @@ button:focus-visible,
 .evidence-header h2,
 .safety-copy h2,
 .level-label {
-  font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  font-family: var(--font-serif);
 }
 
 .brand-copy strong {
@@ -144,7 +144,7 @@ button:focus-visible,
 }
 
 .session-title strong {
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 650;
 }
@@ -367,7 +367,7 @@ button:focus-visible,
 }
 
 .score-ring strong {
-  font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  font-family: var(--font-serif);
 }
 
 .level-label {
@@ -462,7 +462,7 @@ button:focus-visible,
   background-color: rgba(237, 242, 238, 0.52);
   background-image: repeating-linear-gradient(transparent 0 31px, rgba(40, 95, 88, 0.075) 31px 32px);
   color: #293832;
-  font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  font-family: var(--font-serif);
   font-size: 14px;
   line-height: 1.75;
 }
