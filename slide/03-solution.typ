@@ -4,71 +4,70 @@
 
 #place(left + top, dx: margin-x, dy: 1.25in)[
   #box(width: content-w, fill: blush, radius: 6pt, inset: (x: 18pt, y: 13pt))[
-    #text(size: 23pt, weight: "bold", fill: wine)[隱形溫度計：把診間對話轉成可追溯的臨床輔助 Dashboard]
+    #text(size: 23pt, weight: "bold", fill: wine)[從原始語音到可稽核的臨床輔助草稿]
     #v(0.06in)
-    #text(size: 13.5pt, fill: muted)[從語音、隱私處理到結構化輸出，將自然對話整理成供專業人員覆核的評估草稿。]
+    #text(size: 13.5pt, fill: muted)[本地模型處理聲音與個資，校對 Agent 修正逐字稿，最後產出具證據與人工確認欄位的結構化結果。]
   ]
 ]
 
 #place(left + top, dx: margin-x, dy: 2.72in)[
   #let step-card(no, title, body, foot, fill: white) = panel([
     #grid(
-      rows: (0.38in, 0.72in, 1.35in, 0.48in),
-      row-gutter: 0.08in,
+      rows: (0.34in, 0.64in, 1.48in, 0.44in),
+      row-gutter: 0.07in,
       tag(no),
-      align(left + horizon)[#text(size: 16pt, weight: "bold")[#title]],
+      align(left + horizon)[#text(size: 14.5pt, weight: "bold")[#title]],
       align(left + top)[#body],
       align(left + horizon)[
-        #box(width: 100%, fill: cream, radius: 4pt, inset: (x: 8pt, y: 7pt))[
-          #align(center)[#text(size: 10.5pt, weight: "bold", fill: wine)[#foot]]
+        #box(width: 100%, fill: cream, radius: 4pt, inset: (x: 6pt, y: 6pt))[
+          #align(center)[#text(size: 9pt, weight: "bold", fill: wine)[#foot]]
         ]
       ],
     )
-  ], fill: fill, height: 3.42in, inset: 16pt)
+  ], fill: fill, height: 3.42in, inset: 14pt)
 
-  #deck-grid(columns: (1fr, 0.24in, 1fr, 0.24in, 1fr, 0.24in, 1fr), gutter: 0.07in,
+  #deck-grid(columns: (1fr, 1fr, 1fr, 1fr, 1fr), gutter: 0.12in,
     step-card(
-      "01", [語音與逐字稿],
-      [#text(size: 12.5pt)[本地 Whisper 轉錄] #v(0.1in)
-       #text(size: 12.5pt)[同步取得語音情緒]],
-      [輸入來自自然醫病對話],
+      "01", [本地語音理解],
+      [#text(size: 11.5pt)[Whisper 分段轉錄] #v(0.09in)
+       #text(size: 11.5pt)[保留時間戳記] #v(0.09in)
+       #text(size: 11.5pt)[wav2vec2 情緒 Profile]],
+      [音訊留在本機處理],
     ),
 
-    align(center + horizon)[#text(size: 27pt, fill: wine)[→]],
-
     step-card(
-      "02", [本機隱私處理],
-      [#text(size: 12.5pt)[CKIP NER 辨識個資] #v(0.1in)
-       #text(size: 12.5pt)[Regex 補強遮蔽] #v(0.1in)
-       #text(size: 12.5pt)[只送出去識別文字]],
-      [原始音訊不進入 LLM], fill: blush,
+      "02", [第一道去識別],
+      [#text(size: 11.5pt)[CKIP NER 辨識實體] #v(0.09in)
+       #text(size: 11.5pt)[Regex 遮蔽個資] #v(0.09in)
+       #text(size: 11.5pt)[轉為安全佔位標籤]],
+      [先遮蔽，再進入雲端], fill: blush,
     ),
 
-    align(center + horizon)[#text(size: 27pt, fill: wine)[→]],
-
     step-card(
-      "03", [結構化 AI 分析],
-      [#text(size: 12.2pt)[BSRS-5 五項線索] #v(0.07in)
-       #text(size: 12.2pt)[自殺想法獨立處理] #v(0.07in)
-       #text(size: 12.2pt)[證據、信心與缺漏] #v(0.07in)
-       #text(size: 12.2pt)[固定 Schema 驗證]],
-      [資訊不足就要求直接確認],
+      "03", [安全校對 Agent],
+      [#text(size: 11.5pt)[修正同音字與標點] #v(0.09in)
+       #text(size: 11.5pt)[保留遮蔽標籤] #v(0.09in)
+       #text(size: 11.5pt)[輸出修改紀錄與警示]],
+      [校對後再次去識別],
     ),
 
-    align(center + horizon)[#text(size: 27pt, fill: wine)[→]],
+    step-card(
+      "04", [多模態結構化],
+      [#text(size: 11.5pt)[文字＋情緒 Profile] #v(0.09in)
+       #text(size: 11.5pt)[BSRS-5 與附加題] #v(0.09in)
+       #text(size: 11.5pt)[證據、信心、資訊缺漏]],
+      [Schema 1.1.0 強制驗證], fill: blush,
+    ),
 
     step-card(
-      "04", [Dashboard 覆核],
-      [#text(size: 12.5pt)[查看分項與原話] #v(0.1in)
-       #text(size: 12.5pt)[確認、修改或追問] #v(0.1in)
-       #text(size: 12.5pt)[匯出結構化 JSON]],
-      [正式判斷由專業人員完成], fill: sand,
+      "05", [專業覆核輸出],
+      [#text(size: 11.5pt)[確認、修改或追問] #v(0.09in)
+       #text(size: 11.5pt)[保留模型與 Prompt 版本] #v(0.09in)
+       #text(size: 11.5pt)[輸出可稽核 JSON]],
+      [正式判斷仍由人完成], fill: sand,
     )
   )
 ]
 
-#place(bottom + left, dx: margin-x, dy: -0.62in)[
-  #text(size: 16.5pt, weight: "bold", fill: wine)[AI 不代填量表、不自行診斷；它讓對話裡的線索更容易被看見與追問。]
-]
 #footer(3)
 #pagebreak()

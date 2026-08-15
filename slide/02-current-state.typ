@@ -14,13 +14,8 @@
           #text(size: 18pt, weight: "bold")[自陳量表仰賴主動承認]
           #v(0.13in)
           #text(size: 12pt, fill: muted)[受到自我認知、防衛或污名影響，填答結果未必呈現完整狀態。]
-          #v(0.12in)
-          #box(width: 100%, fill: white, radius: 4pt, stroke: 1pt + sand, inset: 10pt)[
-            #text(size: 11pt, fill: muted)[量表回答]
-            #linebreak()
-            #text(size: 14pt, weight: "bold")[「沒有，我還好。」]
-          ]
-          #v(0.08in)
+          #v(0.13in)
+          #text(size: 12pt, fill: muted)[例如：處於易怒狀態的人可能會不願意承認自己易怒]
         ],
         block(fill: blush, radius: 6pt, inset: 14pt, height: 3.62in)[
           #text(size: 11pt, weight: "bold", fill: wine)[痛點 02｜自殺風險仍需更早看見]
@@ -59,8 +54,5 @@
   )
 ]
 
-#place(bottom + left, dx: margin-x, dy: -0.62in)[
-  #text(size: 17pt, weight: "bold", fill: wine)[風險線索可能已經出現在對話裡，卻沒有被量表或單次問答捕捉。]
-]
 #footer(2)
 #pagebreak()
